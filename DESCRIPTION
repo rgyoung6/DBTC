@@ -10,7 +10,7 @@ Author: c(person(given = "Robert G",
           )
 Maintainer: Robert G Young <rgyoung6@gmail.com>
 Description: DBTC uses the dada2 R tools to analyse metabarcode data, use the BLAST algorithm to search unknown sequences against local libraries, and then reduced matched results and provides best taxonomic assignments for the obtained data.
-License: GPL-2 | GPL-3
+License: GPL-2 | GPL-3 + file LICENSE
 Encoding: UTF-8
 URL: <https://github.com/rgyoung6/DBTC>
 Depends: 
@@ -23,7 +23,8 @@ Imports:
   ShortRead,
   taxonomizr,
   pbapply,
-  magrittr
+  magrittr,
+  ggplot2
 Language: en-GB
 LazyData: true
 RoxygenNote: 7.2.3

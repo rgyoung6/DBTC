@@ -2,6 +2,22 @@
 # ******************************************************************************
 #Roxygen2 Documentation:
 
+
+# DBTC Packages
+#' @import dada2
+#' @import taxonomizr
+#' @import pbapply
+#' @import utils
+#'
+# DBTC Functions
+#' @importFrom plyr rbind.fill
+#' @importFrom ShortRead readFastq
+#' @importFrom ShortRead writeFastq
+#' @importFrom stats aggregate
+#' @importFrom stats median
+#' @importFrom stats na.omit
+#' @importFrom ggplot2 ggsave
+#'
 #' @export
 #'
 #' @title Dada Implement
