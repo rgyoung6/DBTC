@@ -16,8 +16,8 @@
 #' The user inputs the location of a file in a directory that contains properly formatted
 #' fasta files which can be used to construct a dataset that can BLASTED. The
 #' NCBI blast+ program, makeblastdb and the NCBI taxonomic database are required to
-#' run this script (see the main page of the DBTCShiny for instructions on how to
-#' obtain these resources).
+#' run this script (see https://github.com/rgyoung6/DBTCShiny#package-dependencies
+#' for instructions on how to obtain these resources).
 #'
 #' @examples
 #' \dontrun{
@@ -30,7 +30,7 @@
 #' will be used to construct a BLASTable database. Default = NULL
 #' @param makeblastdbPath The local path for the blast+ makeblastdbPath program
 #' @param taxaDBLoc The location of the NCBI taxonomic data base (accessionTaxa.sql
-#' see the main DBTCShiny page for details).
+#' see the https://github.com/rgyoung6/DBTCShiny#package-dependencies for details).
 #' @param inputFormat This will either be NCBI formatted fasta file (header
 #' example >uniqueID|NCBItaxaID|Genus|species) or a MACER
 #' (header example >uniqueID|other_ID|Genus|species|Other_info|markerOrDatabase)
@@ -47,7 +47,7 @@
 #' Young, R. G., Hanner, R. H. (Submitted October 2023). Title Here. Biodiversity Data Journal.
 #'
 #' @note
-#' When running DBTCShiny functions the paths for the files selected cannot have
+#' When running DBTC functions the paths for the files selected cannot have
 #' whitespace! File folder locations should be as short as possible (close to
 #' the root directory) as some functions do not process long naming conventions.
 #' Also, special characters should be avoided (including question mark, number

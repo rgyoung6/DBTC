@@ -31,7 +31,7 @@ with the same taxonomic result will be combined. The BLAST values in parentheses
 the minimum coverage and identity, and the maximum eValue.
 }
 \note{
-When running DBTCShiny functions the paths for the files selected cannot have
+When running DBTC functions the paths for the files selected cannot have
 whitespace! File folder locations should be as short as possible (close to
 the root directory) as some functions do not process long naming conventions.
 Also, special characters should be avoided (including question mark, number

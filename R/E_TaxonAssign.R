@@ -40,7 +40,7 @@
 #' @param fileLoc The location of a file in a directory where all of the paired
 #' fasta and BLAST (and potentially ASV) files are located.
 #' @param taxaDBLoc The location of the NCBI taxonomic data base (accessionTaxa.sql,
-#'  see the main DBTCShiny page for details). The local path for the directory
+#'  see the main DBTC page for details). The local path for the directory
 #'  containing all of the fasta files wishing to be BLASTed.
 #' @param numCores The number of cores used to run the function (default = 1,
 #' Windows systems can only use a single core).
@@ -69,7 +69,7 @@
 #' Young, R. G., Hanner, R. H. (Submitted October 2023). Title Here. Biodiversity Data Journal.
 #'
 #' @note
-#' When running DBTCShiny functions the paths for the files selected cannot have
+#' When running DBTC functions the paths for the files selected cannot have
 #' whitespace! File folder locations should be as short as possible (close to
 #' the root directory) as some functions do not process long naming conventions.
 #' Also, special characters should be avoided (including question mark, number

@@ -21,7 +21,7 @@ taxon_assign(
 fasta and BLAST (and potentially ASV) files are located.}
 
 \item{taxaDBLoc}{The location of the NCBI taxonomic data base (accessionTaxa.sql,
-see the main DBTCShiny page for details). The local path for the directory
+see the main DBTC page for details). The local path for the directory
 containing all of the fasta files wishing to be BLASTed.}
 
 \item{numCores}{The number of cores used to run the function (default = 1,
@@ -70,7 +70,7 @@ the number of records with this taxonomic placement, the minimum coverage and
 identity, and the maximum eValue for the reported taxa.
 }
 \note{
-When running DBTCShiny functions the paths for the files selected cannot have
+When running DBTC functions the paths for the files selected cannot have
 whitespace! File folder locations should be as short as possible (close to
 the root directory) as some functions do not process long naming conventions.
 Also, special characters should be avoided (including question mark, number
