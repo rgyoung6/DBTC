@@ -2,13 +2,12 @@
 # ******************************************************************************
 #Roxygen2 Documentation:
 
-
 # DBTC Packages
 #' @import dada2
 #' @import taxonomizr
 #' @import pbapply
 #' @import utils
-#'
+
 # DBTC Functions
 #' @importFrom plyr rbind.fill
 #' @importFrom ShortRead readFastq
