@@ -157,8 +157,6 @@ taxon_assign<- function(fileLoc = NULL, taxaDBLoc = NULL, numCores = 1, coverage
 
     if(length(positions)==0){
 
-print("In the loop checking if there is an associated .fas or .asv file to accompany the BLAST output file.")
-
       #initialize the output variable
       finalCondensedOut<-NULL
 
@@ -229,7 +227,6 @@ print("In the loop checking if there is an associated .fas or .asv file to accom
 
             #Run the taxonomizr taxonomy function
             suppressWarnings(taxa <- taxonomizr::getTaxonomy(blastResultsTarget$taxa_id, 'accessionTaxa.sql'))
-#            taxa <- taxonomizr::getTaxonomy(blastResultsTarget$taxa_id, taxaDBLoc)
             taxa <- as.data.frame(taxa)
 
             if(nrow(taxa) == 1){

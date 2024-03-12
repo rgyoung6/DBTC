@@ -31,10 +31,6 @@
 #' @param makeblastdbPath The local path for the blast+ makeblastdbPath program
 #' @param taxaDBLoc The location of the NCBI taxonomic data base (accessionTaxa.sql
 #' see the main DBTCShiny page for details).
-#' @param inputFormat This will either be NCBI formatted fasta file (header
-#' example >uniqueID|NCBItaxaID|Genus|species) or a MACER
-#' (header example >uniqueID|other_ID|Genus|species|Other_info|markerOrDatabase)
-#' formatted file.
 #' @param dbName A short 6-8 alpha character name used when building a database.
 #' @param minLen The minimum sequence length used to construct the BLAST database.
 #'
@@ -212,7 +208,7 @@ make_BLAST_DB <- function(fileLoc = NULL, makeblastdbPath = "makeblastdb", taxaD
         write.table(seqTable, fileLoc , row.names=FALSE, col.names=FALSE, quote = FALSE, sep="\n", append=FALSE)
 
         #Build the BLAST command
-        BLASTMakeDBCmdString<- paste0(makeblastdbPath, " -in ", fileLoc, "  -parse_seqids -dbtype nucl -out ", dbName)
+        BLASTMakeDBCmdString<- paste0(makeblastdbPath, " -in ", fileLoc, "  -parse_seqids -title '", dbName, "' -dbtype nucl -out ", dbName)
 
         print("********************************************************************************")
         print(paste0("Begin makeblastdb at time: ", Sys.time()))
