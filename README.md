@@ -35,11 +35,7 @@ This package contains the DBTC functions for metabarcoding and BLASTing unknown 
   * [Combine Assignment Output](#combine-assignment-output)
   * [Reduce Taxa](#reduce-taxa)
   * [Combine Reduced Output](#combine-reduced-output)
-- [Import GPS and grouping data](#import-gps-and-grouping-data)
-- [Mapping Dashboard](#mapping-dashboard)
-  * [Mapping](#mapping)
-  * [Data Filtering](#data-filtering)
-  * [Mapped Data Table](#mapped-data-table) 
+
 
 # Installation 
 
@@ -100,7 +96,7 @@ In addition to the NCBI resources, DBTC can also use custom databases. To establ
 
 [MACER GitHub](https://github.com/rgyoung6/MACER) (will have the most recent version and development versions)
 
-### Create a local NCBI taxonomy database to assign taxonomic identifications to BLAST results <a id="taxonomizr"></a>
+### Create a local NCBI taxonomy database to assign taxonomic identifications to BLAST results
 In the 'Preparation' section of the [taxonomizr website](https://cran.r-project.org/web/packages/taxonomizr/vignettes/usage.html), use the instructions and the prepareDatabase('accessionTaxa.sql', getAccessions = FALSE) taxonomizr command to establish a local taxonomy database.
 ```
 prepareDatabase('accessionTaxa.sql', getAccessions = FALSE)
@@ -301,7 +297,7 @@ The output files from this function appear in four folders. See the below diagra
                                                                                                       -TotalTable.tsv
 ```
 
-### Intrepretation
+### Interpretation
 Quality pdf's in the A_Qual folder represent the quality metrics for the raw [Fastq](https://en.wikipedia.org/wiki/FASTQ_format) files (This folder may not be present if printQualityPdf is set to FALSE).
 Files in the B_Filt folder represent the trimming (in the Primer_Trim folder) and trimmed and cleaned in the larger folder.
 Quality pdf's in the C_FiltQual folder represent the quality metrics for the trimmed and cleaned [Fastq](https://en.wikipedia.org/wiki/FASTQ_format) files (This folder may not be present if printQualityPdf is set to FALSE).
@@ -339,7 +335,7 @@ The output from this function includes three files.
   2. YYYY_MM_DD_HHMM_combinedDada.fas - combined [Fasta](https://en.wikipedia.org/wiki/FASTA_format) file
   3. YYYY_MM_DD_HHMM_combinedDada.txt - Summary file from the combine_dada_output run
 
-### Intrepretation
+### Interpretation
 Outputted data files will come in the same [ASV](https://en.wikipedia.org/wiki/Amplicon_sequence_variant) table format as the output [dada_inplement()](#dada-implement) [ASV](https://en.wikipedia.org/wiki/Amplicon_sequence_variant) files. 
 
 ### Dependencies
@@ -359,14 +355,14 @@ This function takes a [Fasta](https://en.wikipedia.org/wiki/FASTA_format) file (
 ### Arguments
 - <strong>fileLoc -</strong> The location of a file in a directory where all [Fasta](https://en.wikipedia.org/wiki/FASTA_format) files will be used to construct a BLASTable database (Default = NULL).
 - <strong>makeblastdbPath -</strong> The local path for the blast+ makeblastdbPath program (Default 'makeblastdb').
-- <strong>taxaDBLoc  -</strong> The location of the NCBI [accessionTaxa.sql](taxonomizr) taxonomic data base (Default NULL).
+- <strong>taxaDBLoc  -</strong> The location of the NCBI [accessionTaxa.sql](#create-a-local-ncbi-taxonomy-database-to-assign-taxonomic-identifications-to-blast-results) taxonomic data base (Default NULL).
 - <strong>dbName -</strong> A short 6-8 alpha character name used when building a database (Default NULL).
 - <strong>minLen -</strong> The minimum sequence length used to construct the BLAST database (Default 100).
 
 ### Output
 The output from this function includes a folder with the BLAST database named according to the submitted dbName.
 
-### Intrepretation
+### Interpretation
 The constructed database can then be used with the [seq_BLAST()](#sequence-blast) function.
 
 ### Dependencies
@@ -393,7 +389,7 @@ Provide a location for the BLAST database you would like to use by selecting a f
 ### Output
 Two files are produced from this function, a BLAST run file and a BLAST results file for each of the [Fasta](https://en.wikipedia.org/wiki/FASTA_format) files in the target directory.
 
-### Intrepretation
+### Interpretation
 The BLAST run file contains the command used to run the BLAST search. The BLAST results file includes all results in a tab delimited .tsv file format with the columns qseqid, sseqid, staxid, qcovs, pident, ssciname, scomname, qstart, qend, sstart, send, evalue.
 
 ### Dependencies
@@ -403,109 +399,99 @@ The BLAST run file contains the command used to run the BLAST search. The BLAST 
 
 ***
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Taxon Assignment
 taxon_assign() - Using BLAST results to construct a table with taxonomic assignments for each unique sequence.
 
 ### Input 
-This function requires a BLAST output file and an associated [Fasta](https://en.wikipedia.org/wiki/FASTA_format) file. In addition, if present an ASV file will also be used to combine the taxonomic results when present. The BLAST results are reduced to a single result for each read. 
+This function requires a BLAST output file and an associated [Fasta](https://en.wikipedia.org/wiki/FASTA_format) file. In addition, if present an [ASV](https://en.wikipedia.org/wiki/Amplicon_sequence_variant) file will also be used to combine with the taxonomic results. The function will take the BLAST results and reduce the taxonomic assignment to a single result for each read. 
 
 ### Arguments
-- <strong>fileLoc -</strong> The location of a file in a directory where all of the paired [Fasta](https://en.wikipedia.org/wiki/FASTA_format) and BLAST (and potentially ASV) files are located.
-- <strong>taxaDBLoc -</strong> The location of the NCBI taxonomic data base (accessionTaxa.sql, see the main DBTCShiny page for details). The local path for the directory containing all of the [Fasta](https://en.wikipedia.org/wiki/FASTA_format) files wishing to be BLASTed.
-- <strong>numCores -</strong> The number of cores used to run the function (default = 1, Windows systems can only use a single core).
-- <strong>coverage -</strong> The percent coverage used for taxonomic assignment for the above threshold results (Default coverage = 95).
-- <strong>ident -</strong> The percent identity used for the taxonomic assignment for above threshold results (Default ident = 95).
-- <strong>propThres -</strong> The proportional threshold flags the final result based on the preponderance of the data. So if the threshold is set to 0.95, results will be flagged if the taxa directly below the assigned taxa has fewer than 0.95 percent of the records causing the upward taxonomic placement (Default ident = 0.95).
-- <strong>coverReportThresh -</strong> The percent coverage threshold used for reporting flags below this threshold (Default coverReportThresh = 95).
-- <strong>identReportThresh -</strong> The percent identity threshold used for reporting flags below this threshold (Default identReportThresh = 95).
-- <strong>includeAllDada  -</strong> When paired Dada ASV tables are present, when set to FALSE, this will exclude records without taxonomic assignment (Default includeAllDada = TRUE).
+- <strong>fileLoc -</strong> The location of a file in a directory where all of the paired [Fasta](https://en.wikipedia.org/wiki/FASTA_format) and BLAST (and potentially [ASV](https://en.wikipedia.org/wiki/Amplicon_sequence_variant)) files are located (Default NULL).
+- <strong>taxaDBLoc -</strong> The location of the NCBI [accessionTaxa.sql](#create-a-local-ncbi-taxonomy-database-to-assign-taxonomic-identifications-to-blast-results) taxonomic data base (Default NULL).
+- <strong>numCores -</strong> The number of cores used to run the function (Default 1, Windows systems can only use a single core).
+- <strong>coverage -</strong> The percent coverage used for taxonomic assignment for the above threshold results (Default 95).
+- <strong>ident -</strong> The percent identity used for the taxonomic assignment for above threshold results (Default 95).
+- <strong>propThres -</strong> The proportional threshold flags the final result based on the preponderance of the data. So if the threshold is set to 0.95, results will be flagged if the taxa directly below the assigned taxa has fewer than 0.95 percent of the records causing the upward taxonomic placement (Default 0.95).
+- <strong>coverReportThresh -</strong> The percent coverage threshold used for reporting flags below this threshold (Default 95).
+- <strong>identReportThresh -</strong> The percent identity threshold used for reporting flags below this threshold (Default 95).
+- <strong>includeAllDada  -</strong> When paired Dada ASV tables are present, when set to FALSE, this will exclude records without taxonomic assignment (Default TRUE).
 
 ### Output
-A single taxonomic assignment file is created contains the string 'taxaAssign_YYYY_MM_DD_HHMM'.
-<a id="taxon-assignment-intrepretation"></a>
-### Intrepretation
-The number of returned BLAST results is dictated by the seq_BLAST() BLASTResults argument. The taxon_assign() function takes into account all returned BLAST results for each read. At each taxonomic level assignmenta have quality metrics in parentheses after the name. These values ("Num_Rec", "Coverage", "Identity", "Max_eVal") represent the number of records with this taxonomic placement, the minimum coverage and identity, and the maximum eValue for the reported taxa.
+A single taxonomic assignment file is created for each BLAST output file with the naming convention having the string '_taxaAssign_YYYY_MM_DD_HHMM.tsv'. In addition, there is a run file that is also generated which contains the run details with the naming convention 'YYYY_MM_DD_HHMM_taxaAssign.txt'.
+<a id="taxon-assignment-interpretation"></a>
+
+### Interpretation
+The number of returned BLAST results is dictated by the [seq_BLAST()](#sequence-blast) BLASTResults argument. The taxon_assign() function takes into account all returned BLAST results for each read. At each taxonomic level assignments have quality metrics in parentheses after the name. These values ("Num_Rec", "Coverage", "Identity", "Max_eVal") represent the number of records with this taxonomic placement, the minimum coverage and identity, and the maximum eValue for the reported taxa.
 
 Column headers for the resulting taxonomic assignments include...
 
-uniqueID, superkingdom, phylum, class, order, family, genus, species, Top_BLAST, Lowest_Single_Ran, Lowest_Single_Taxa, Lowest_Single_Rank_Above_Thres, Lowest_Single_Taxa_Above_Thres, Final_Common_Names, Final_Rank, Final_Taxa, Final_Rank_Taxa_Thres, Result_Code, Sequence, Length, Results, Followed by columns of samples containing ASV values
+uniqueID, superkingdom, phylum, class, order, family, genus, species, Top_BLAST, Lowest_Single_Ran, Lowest_Single_Taxa, Lowest_Single_Rank_Above_Thres, Lowest_Single_Taxa_Above_Thres, Final_Common_Names, Final_Rank, Final_Taxa, Final_Rank_Taxa_Thres, Result_Code, Sequence, Length, Results, followed by columns of samples containing ASV values
 
-There are three columns that deserve special explaination. 
+There are three columns that deserve special explanation. 
 
-The Final_Rank_Taxa_Thres column contains the threshold values (Coverage, Identitiy) applied to the final rank and taxonomic values for the associated records.  
-The Results column contains the reference to the record if it was able to be merged, or if it is representing a forward or reverse unidirectional read.
-The Result_Code column contains flags placed on the results to better understand the quality of the resulting taxonomic assignments. Below is a list of codes. T
+- The Final_Rank_Taxa_Thres column contains the threshold values (Coverage, Identitiy) applied to the final rank and taxonomic values for the associated records.  
+- The Results column contains the reference to the record if it was from a merged, forward or reverse analysis result.
+- The Result_Code column contains flags placed on the results to better understand the quality of the resulting taxonomic assignments. Below is a list of codes:
 
   - SFAT(coverage, ident): Saturated filtered taxa above threshold
   - SANF(coverage, ident): Saturated non-filtered
   - BIRT(identReportThresh): Final taxa result is below the identity reporting threshold
-  - BCRT(coverReportThresh): Final taxa below the nucleotide coverage reporting threshold
+  - BCRT(coverReportThresh): Final taxa result is below the nucleotide coverage reporting threshold
   - TBAT(propThres): Taxa Below Assigned Taxa Threshold
 
-Note: Records with BIRT, BCRT, and TBAT flags should be highly scruntized. SANF results should be explored and the size of the database, the trust placed in the records in the database, and the depth of the BLAST results should be considered when assessing records with this flag. Records with SFAT are among the least concerning as the BLAST results were saturated but this taxonomic assignment saturation occurred above your set quality coverage and identity threshold. Concerns with records with this result could be that the depth of the BLAST analysis was not low enough for very large databases, or that the database is not complete (taxonomic breadth) enough for smaller databases.
+Note: Records with BIRT and BCRT flags should be highly scrutinized. TBAT are also concerning in that they may represent a less specific taxonomic placement due to the moving of the result to a higher taxonomic placement. The taxonomic rank directly below the final reported rank should be reviewed as there may be potential to adjust the final taxonomic assignment. SANF results should be explored and the size of the database, the trust placed in the records in the database, and the depth of the BLAST results should be considered when assessing records with this flag. Records with SFAT are among the least concerning as the BLAST results were saturated but this taxonomic assignment saturation occurred above your set quality coverage and identity threshold. Concerns with records with this result could be that the depth of the BLAST analysis was not low enough for very large databases, or that the database is not complete (taxonomic breadth) when using smaller databases.
 
 ### Dependencies
-- taxonomizr()
+- [taxonomizr()](https://cran.r-project.org/web/packages/taxonomizr/vignettes/usage.html)
 - pbapply()
   
 ([Back to Top](#table-of-contents))
+
 ***
 
 ## Combine Assignment Output
-combine_assign_output() - Using results from the taxon_assign() function, combine all files with the string 'taxaAssign_YYYY_MM_DD_HHMM' in to a single .tsv file.
+combine_assign_output() - Using results from the [taxon_assign()](#taxon-assignment) function, combines all files with the string '_taxaAssign_YYYY_MM_DD_HHMM.tsv' in to a single .tsv file.
 
 ### Input 
-Select a file in a folder with the taxa assigned files you would like to combine (extension '_taxaAssign_YYYY_MM_DD_HHMM.tsv'). NOTE: all '_taxaAssign_' files in the folder location should originate from the same dada output file but have outputs from different BLAST sequence libraries and therefore contain the same ASVs.
+Select a file in a folder with the taxa assigned files you would like to combine (extension '_taxaAssign_YYYY_MM_DD_HHMM.tsv'). NOTE: all '_taxaAssign_YYYY_MM_DD_HHMM.tsv' files in the folder location should originate from the same dada output file but have outputs from different BLAST sequence libraries and therefore contain the same ASV's.
 
 ### Arguments
-- <strong>fileLoc -</strong> The location of a file in a directory where all of the 'taxaAssign' files are located.
-- <strong>numCores -</strong> The number of cores used to run the function (default = 1, Windows systems can only use a single core).
+- <strong>fileLoc -</strong> The location of a file in a directory where all of the '_taxaAssign_YYYY_MM_DD_HHMM.tsv' files are located.
+- <strong>numCores -</strong> The number of cores used to run the function (Default 1, Windows systems can only use a single core).
 
 ### Output
-This function produces a '2023_08_03_0913_taxaAssignCombined.tsv' and a '2023_08_03_0913_taxaAssignCombined.txt' file in the selected target directory.
+This function produces a 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' and a 'YYYY_MM_DD_HHMM_taxaAssignCombined.txt' file in the selected target directory.
 
-### Intrepretation
-The intrepretation of the output file for the combine_assign_output() 'taxaAssignCombined' files is the same as the is the same as the taxon_assign() 'taxaAssign' files (see above description).
+### Interpretation
+The interpretation of the output file for the combine_assign_output() 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' files is the same as the is the same as the [taxon_assign()](#taxon-assignment) '_taxaAssign_YYYY_MM_DD_HHMM.tsv' files.
 
 ### Dependencies
 - pbapply()
   
 ([Back to Top](#table-of-contents))
+
 ***
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Reduce Taxa
 reduce_taxa() - Using results from taxon_assign() and/or combine_assign_output() this function combines all reads with the same taxonomic assignment into a single result.
@@ -520,8 +506,8 @@ This function requires a file in a directory where all 'taxaAssign' and/or 'taxa
 ### Output
 This function produces a '_CombineTaxaReduced.tsv' file for every 'taxaAssign' or 'taxaAssignCombine' present in the target directory.
 
-### Intrepretation
-Reduced taxonomic assignment files have fewer columns in the main taxa_reduced.tsv file than the taxaAssign files as columns are collapsed. In addition, the values in the taxonomic columns in parentheses represent the average values across all of the results with the same taxonomic assignment (see taxon_assign() intrepretation above).
+### Interpretation
+Reduced taxonomic assignment files have fewer columns in the main taxa_reduced.tsv file than the taxaAssign files as columns are collapsed. In addition, the values in the taxonomic columns in parentheses represent the average values across all of the results with the same taxonomic assignment (see taxon_assign() interpretation above).
 
 The columns include, superkingdom, phylum, class, order, family, genus, species, Top_BLAST, Final_Common_Names, Final_Rank, Final_Taxa, Result_Code, RepSequence, Number_ASV, Average_ASV_Length, Number_Occurrences, Average_ASV_Per_Sample, Median_ASV_Per_Sample, Results.
 
@@ -534,6 +520,7 @@ Add in a note about the representative sequence for the taxa and how I got it.
 - pbapply()
 
 ([Back to Top](#table-of-contents))
+
 ***
 
 ## Combine Reduced Output
@@ -550,7 +537,7 @@ There are only two arguments necessary for this function. The first is the locat
 ### Output
 Two files, a CombineTaxaReduced.tsv result file and a CombineTaxaReduced.txt run summary file are generated from this function. The result file contains presence/absence data in a matrix that associates the data with samples, taxa, and molecular marker. The column headers in the results file includes the following, superkingdom, phylum, class, order, family, genus, species, markers(n number of columns), samples (n number).
 
-### Intrepretation
+### Interpretation
 There is no specific unique interpretation for this file.
 
 ### Dependencies
