@@ -25,7 +25,6 @@ This package contains the DBTC functions for metabarcoding and BLASTing unknown 
      * [CRAN](#cran)
 - [Function Descriptions](#function-descriptions)
 - [Naming Convention Rules](#naming-convention-rules)
-- [Citation](#citation)
 - [Package Function Details](#package-function-details)
   * [Dada Implement](#dada-implement)
   * [Combine Dada Output](#combine-dada-output)
@@ -35,6 +34,7 @@ This package contains the DBTC functions for metabarcoding and BLASTing unknown 
   * [Combine Assignment Output](#combine-assignment-output)
   * [Reduce Taxa](#reduce-taxa)
   * [Combine Reduced Output](#combine-reduced-output)
+- [Citation](#citation)
 
 # Installation 
 
@@ -201,13 +201,6 @@ The following strings are those used in DBTC and should not be used in file or f
   - _taxaAssign
   - _taxaCombined
   - _taxaReduced
-
-([Back to Top](#table-of-contents))
-
-***
-
-# Citation
-Young RG, et al., Hanner RH (2024) A Scalable, Open Source, Cross Platform, MetaBarcode Analysis Method using Dada2 and BLAST. Biodiversity Data Journal (In progress)
 
 ([Back to Top](#table-of-contents))
 
@@ -524,5 +517,12 @@ The interpretation of the output file is the same as the [taxon_assign()](#taxon
 
 ### Dependencies
 - plyr() rbind.fill
+
+([Back to Top](#table-of-contents))
+
+***
+
+# Citation
+Young RG, et al., Hanner RH (2024) A Scalable, Open Source, Cross Platform, MetaBarcode Analysis Method using Dada2 and BLAST. Biodiversity Data Journal (In progress)
 
 ([Back to Top](#table-of-contents))
