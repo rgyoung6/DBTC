@@ -18,7 +18,7 @@ seq_BLAST(
 BLAST database is located (Default NULL).}
 
 \item{querySeqPath}{The location of a file in a directory containing all of the
-fasta files wishing to be BLASTed (Default NULL)}
+fasta files wishing to be BLASTed (Default NULL).}
 
 \item{blastnPath}{The location of the NCBI blast+ blastn program (Default 'blastn').}
 

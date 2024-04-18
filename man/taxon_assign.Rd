@@ -24,7 +24,7 @@ fasta and BLAST (and potentially ASV) files are located (Default NULL).}
 for accessionTaxa.sql see the main DBTC page for details).}
 
 \item{numCores}{The number of cores used to run the function (Default 1,
-Windows systems can only use a single core)}
+Windows systems can only use a single core).}
 
 \item{coverage}{The percent coverage used for taxonomic assignment for the
 above threshold results (Default 95).}
