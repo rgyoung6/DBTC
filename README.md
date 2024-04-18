@@ -282,19 +282,28 @@ The output files from this function appear in four folders. See the below diagra
                 ...                            ...
                       |
                       |
-            -------------------------------------------------------------------------------------------------------   
-            |                                 |                                 |                                 |  
-            |                                 |                                 |                                 |   
-2023_10_16_1511_Run1_A_Qual       2023_10_16_1511_Run1_B_Filt    2023_10_16_1511_Run1_C_FiltQual    2023_10_16_1511_Run1_D_Output
-  -fwdQual.pdf                      -fwdFilt.fastq                 -filtFwdQual.pdf                   -dadaSummary.txt
-  -revQual.pdf                      -revFilt.fastq                 -filtRevQual.pdf                   -dadaSummaryTable.tsv
-  ...                               ...                            ...                                -ErrorForward.pdf
-                                    Primer_Trim                                                       -ErrorReverse.pdf
-                                      -primeTrim.fastq                                                -MergeFwdRev.tsv
-                                      ...                                                             -MergeFwdRev.fas
-                                                                                                      -Merge.tsv
-                                                                                                      -Merge.fas
-                                                                                                      -TotalTable.tsv
+            --------------------------------------------------------   
+            |                |             |                        |          
+YYYY_MM_DD_HHMM_Run1_A_Qual  |             |                        |
+  -revQual.pdf               |  YYYY_MM_DD_HHMM_Run1_C_FiltQual     |
+  ...                        |    -filtFwdQual.pdf                  |
+                             |    -filtRevQual.pdf                  |
+                             |    ...                               |
+                             |                                      |
+                             |                    YYYY_MM_DD_HHMM_Run1_D_Output
+                             |                      -dadaSummary.txt
+                             |                      -dadaSummaryTable.tsv
+                             |                      -ErrorForward.pdf
+                             |                      -ErrorReverse.pdf
+                             |                      -MergeFwdRev.tsv
+                  YYYY_MM_DD_HHMM_Run1_B_Filt       -MergeFwdRev.fas
+                    -fwdFilt.fastq                  -Merge.tsv
+                    -revFilt.fastq                  -Merge.fas
+                    ...                             -TotalTable.tsv
+                    Primer_Trim
+                      -primeTrim.fastq
+                      ...
+
 ```
 
 ### Interpretation
@@ -472,49 +481,23 @@ The interpretation of the output file for the combine_assign_output() 'YYYY_MM_D
 
 ***
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Reduce Taxa
-reduce_taxa() - Using results from taxon_assign() and/or combine_assign_output() this function combines all reads with the same taxonomic assignment into a single result.
+reduce_taxa() - Using results from [taxon_assign()](#taxon-assignment) and/or [Combine Assignment Output](#combine-assignment-output) this function combines all reads with the same taxonomic assignment into a single result for each of the files submitted.
 
 ### Input 
-This function requires a file in a directory where all 'taxaAssign' and/or 'taxaAssignCombine' files in that directory will be combined. All records with the same taxonomic result will be combined. The BLAST values in parentheses ("Num_Rec", "Coverage", "Identity", "Max_eVal") are combine by the mean number of records, the minimum coverage and identity, and the maximum eValue.
+This function requires a file in a directory where all '_taxaAssign_YYYY_MM_DD_HHMM.tsv' and/or 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' files in that directory will be combined. All records with the same taxonomic result will be combined. The BLAST values in parentheses ("Num_Rec", "Coverage", "Identity", "Max_eVal") are combine by the mean number of records, the mean of the minimum coverage and identity values, and the mean of the maximum eValues.
 
 ### Arguments
-- <strong>fileLoc -</strong>  The location of a file in a directory where all of the 'taxaAssign' and/or 'taxaAssignCombine' files are located.
-- <strong>numCores -</strong>  The number of cores used to run the function (default = 1, Windows systems can only use a single core).
+- <strong>fileLoc -</strong>  The location of a file in a directory where all of the '_taxaAssign_YYYY_MM_DD_HHMM.tsv' and/or 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' files are located.
+- <strong>numCores -</strong> The number of cores used to run the function (Default 1, Windows systems can only use a single core).
 
 ### Output
-This function produces a '_CombineTaxaReduced.tsv' file for every 'taxaAssign' or 'taxaAssignCombine' present in the target directory.
+This function produces a '_taxaReduced_YYYY_MM_DD_HHMM.tsv' file for every '_taxaAssign_YYYY_MM_DD_HHMM.tsv' or 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' present in the target directory.
 
 ### Interpretation
-Reduced taxonomic assignment files have fewer columns in the main taxa_reduced.tsv file than the taxaAssign files as columns are collapsed. In addition, the values in the taxonomic columns in parentheses represent the average values across all of the results with the same taxonomic assignment (see taxon_assign() interpretation above).
+Reduced taxonomic assignment files have fewer columns in the main taxa_reduced.tsv file than the '_taxaAssign_YYYY_MM_DD_HHMM.tsv' or 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' files as columns are collapsed. In addition, the values in the taxonomic columns in parentheses represent the average values across all of the results with the same taxonomic assignment (see [taxon_assign()](#taxon-assignment) interpretation).
 
-The columns include, superkingdom, phylum, class, order, family, genus, species, Top_BLAST, Final_Common_Names, Final_Rank, Final_Taxa, Result_Code, RepSequence, Number_ASV, Average_ASV_Length, Number_Occurrences, Average_ASV_Per_Sample, Median_ASV_Per_Sample, Results.
-
-
-Add in a note about the representative sequence for the taxa and how I got it.
-
-
+The columns include, superkingdom, phylum, class, order, family, genus, species, Top_BLAST, Final_Common_Names, Final_Rank, Final_Taxa, Result_Code, RepSequence, Number_ASV, Average_ASV_Length, Number_Occurrences, Average_ASV_Per_Sample, Median_ASV_Per_Sample, Results. NOTE: The representative sequence (RepSequence) is the longest sequence for each of the collapsed taxa assigned. 
 
 ### Dependencies
 - pbapply()
@@ -524,21 +507,20 @@ Add in a note about the representative sequence for the taxa and how I got it.
 ***
 
 ## Combine Reduced Output
-combine_reduced_output() - This function takes 'taxaReduced' files generated from the same biological samples but representing different amplified molecular markers and collapses these data into a single file. The outcome of this process results in a presence absence matrix for all taxa and markers.
+combine_reduced_output() - This function takes '_taxaReduced_YYYY_MM_DD_HHMM.tsv' files generated from the same biological samples but representing different amplified molecular markers and collapses these data into a single file. The outcome of this process results in a presence absence matrix for all taxa and markers.
 
 ### Input 
-Select a file in a folder with 'taxaReduced' files representing data for the same biological samples but representing different amplified molecular markers.
+Select a file in a folder with '_taxaReduced_YYYY_MM_DD_HHMM.tsv' files representing data for the same biological samples but representing different amplified molecular markers.
 
 ### Arguments
-There are only two arguments necessary for this function. The first is the location of a file in the folder with all of the files that are wanting to be combined. The second is the combineReduceTaxa function which will reduce all read count values to binary 1 or 0 entries. 
-- <strong>fileLoc -</strong>  The location of a file in a directory where all of the 'taxaReducedAssign' files are located.
-- <strong>presenceAbsence -</strong>  A TRUE or FALSE value used to indicate if the read values should be replaced with presence/absence (1/0) data. This change is necessary when combining taxa for the same named samples across molecular markers (TRUE) but is not necessary when combining results for taxa with all unique sample names (FALSE). Note: For visulization on the DBTCShiny mapping component displaying read intensity all samples should have unique names and this value should be set to FALSE (default = TRUE to replace values with presence/absence 1/0 values).
+- <strong>fileLoc -</strong>  The location of a file in a directory where all of the '_taxaReduced_YYYY_MM_DD_HHMM.tsv' files are located.
+- <strong>presenceAbsence -</strong>  A TRUE or FALSE value used to indicate if the read values should be replaced with presence/absence (1/0) data. This change is necessary when combining taxa for the same named samples across molecular markers (TRUE) but is not necessary when combining results for taxa with all unique sample names (FALSE). 
 
 ### Output
-Two files, a CombineTaxaReduced.tsv result file and a CombineTaxaReduced.txt run summary file are generated from this function. The result file contains presence/absence data in a matrix that associates the data with samples, taxa, and molecular marker. The column headers in the results file includes the following, superkingdom, phylum, class, order, family, genus, species, markers(n number of columns), samples (n number).
+Two files, a 'YYYY_MM_DD_HHMM_CombineTaxaReduced.tsv' result file and a 'YYYY_MM_DD_HHMM_CombineTaxaReduced.txt' run summary file are generated from this function. The result file contains presence/absence data in a matrix that associates the data with samples, taxa, and molecular marker. The column headers in the results file includes the following, superkingdom, phylum, class, order, family, genus, species, markers(n number of columns), samples (n number).
 
 ### Interpretation
-There is no specific unique interpretation for this file.
+The interpretation of the output file is the same as the [taxon_assign()](#taxon-assignment) '_taxaAssign_YYYY_MM_DD_HHMM.tsv' files.
 
 ### Dependencies
 - plyr() rbind.fill

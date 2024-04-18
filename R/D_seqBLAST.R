@@ -36,7 +36,7 @@
 #' @param databasePath The location of a file in a directory where the desired
 #' BLAST database is located (Default NULL).
 #' @param querySeqPath The location of a file in a directory containing all of the
-#' fasta files wishing to be BLASTed (Default NULL)
+#' fasta files wishing to be BLASTed (Default NULL).
 #' @param blastnPath The location of the NCBI blast+ blastn program (Default 'blastn').
 #' @param minLen The minimum length of the sequences that will be BLASTed (Default 100).
 #' @param BLASTResults The number of returned results, or the depth of the reported

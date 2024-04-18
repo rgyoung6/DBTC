@@ -8,17 +8,18 @@
 #' @author Robert G. Young
 #'
 #' @description
-#' This function takes a file selection and then uses all 'taxaAssign' and/or
-#' 'taxaAssignCombine' files in that directory and reduces all ASV with the same
-#' taxonomic assignment into a single taxonomic result and places these results in a
-#' 'taxaReduced' file for each of the target files in the directory.
+#' This function takes a file selection and then uses all '_taxaAssign_YYYY_MM_DD_HHMM.tsv'
+#' and/or 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' files in that directory and reduces all ASV with the same
+#' taxonomic assignment into a single taxonomic result for each submitted file. The results are then placed in to a
+#' '_taxaReduced_YYYY_MM_DD_HHMM.tsv' file for each of the target files in the directory.
 #'
 #' @details
-#' This function requires a file in a directory where all 'taxaAssign'
-#' and/or 'taxaAssignCombine' files in that directory will be combined. All records
-#' with the same dicument with the same taxonomic result will be combined. The values in parentheses
-#' ("Num_Rec", "Coverage", "Identity", "Max_eVal") are combine by the mean number of records,
-#' the minimum coverage and identity, and the maximum eValue.
+#' This function requires a file in a directory where all '_taxaAssign_YYYY_MM_DD_HHMM.tsv'
+#' and/or 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' files in that directory will
+#' be combined. All records with the same taxonomic result will be combined. The
+#' BLAST values in parentheses ("Num_Rec", "Coverage", "Identity", "Max_eVal")
+#' are combine by the mean number of records, the mean of the minimum coverage
+#' and identity values, and the mean of the maximum eValues.
 #'
 #' @examples
 #' \dontrun{

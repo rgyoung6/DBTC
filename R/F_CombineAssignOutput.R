@@ -109,8 +109,6 @@ combine_assign_output <- function(fileLoc = NULL,   numCores = 1){
     files[,2] <- list.files(path = fileLoc, pattern = "*[.]*")
     #Get all files with the '_taxaAssign' string
     files <- files[grepl("_taxaAssign_.*", files[,2]),]
-    #Remove files with _taxaAssignCombined_
-    files <- files[!grepl("_taxaAssignCombined_.*", files[,2]),]
     # Get the names of the files
     files[,3] <- gsub("_taxaAssign_.*","",files[,2])
     # Get a unique number for each file to associate with the combined output results
