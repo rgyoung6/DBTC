@@ -18,36 +18,33 @@ taxon_assign(
 }
 \arguments{
 \item{fileLoc}{The location of a file in a directory where all of the paired
-fasta and BLAST (and potentially ASV) files are located.}
+fasta and BLAST (and potentially ASV) files are located (Default NULL).}
 
-\item{taxaDBLoc}{The location of the NCBI taxonomic data base (accessionTaxa.sql,
-see the main DBTC page for details). The local path for the directory
-containing all of the fasta files wishing to be BLASTed.}
+\item{taxaDBLoc}{The location of the NCBI taxonomic data base (Default NULL;
+for accessionTaxa.sql see the main DBTC page for details).}
 
-\item{numCores}{The number of cores used to run the function (default = 1,
-Windows systems can only use a single core).}
+\item{numCores}{The number of cores used to run the function (Default 1,
+Windows systems can only use a single core)}
 
 \item{coverage}{The percent coverage used for taxonomic assignment for the
-above threshold results (Default coverage = 95).}
+above threshold results (Default 95).}
 
 \item{ident}{The percent identity used for the taxonomic assignment for above
-threshold results (Default ident = 95).}
+threshold results (Default 95).}
 
 \item{propThres}{The proportional threshold flags the final result based on
 the preponderance of the data. So if the threshold is set to 0.95, results
 will be flagged if the taxa directly below the assigned taxa has fewer than
-0.95 percent of the records causing the upward taxonomic placement (Default
-ident = 0.95).}
+0.95 percent of the records causing the upward taxonomic placement (Default 0.95).}
 
 \item{coverReportThresh}{The percent coverage threshold used for reporting
-flags below this threshold (Default coverReportThresh = 95).}
+flags below this threshold (Default 95).}
 
 \item{identReportThresh}{The percent identity threshold used for reporting
-flags below this threshold (Default identReportThresh = 95).}
+flags below this threshold (Default 95).}
 
 \item{includeAllDada}{When paired Dada ASV tables are present, when set to
-FALSE, this will exclude records without taxonomic assignment (Default
-includeAllDada = TRUE).}
+FALSE, this will exclude records without taxonomic assignment (Default TRUE).}
 }
 \value{
 This function produces a taxa_reduced file for each submitted BLAST-fasta submission.
@@ -61,7 +58,7 @@ be combined with the ASV table.
 }
 \details{
 This function requires a BLAST output file and an associated fasta file. In
-addition, if present an ASV file will also be used to combine the
+addition, if present an ASV file will also be used and combined with the
 taxonomic results when present. The BLAST results are reduced to a single
 result for each read. At each taxonomic level there may be one or more
 taxonomic assignments. Each assignment has quality metrics in parentheses after
@@ -98,7 +95,8 @@ ident = 95, propThres = 0.95, coverReportThresh=0, identReportThresh=0, includeA
 }
 \references{
 <https://github.com/rgyoung6/DBTC>
-Young, R. G., Hanner, R. H. (Submitted October 2023). Title Here. Biodiversity Data Journal.
+Young, R. G., Hanner, R. H. (Submitted October 2023). Dada-BLAST-Taxon Assign-Condense
+Shiny Application (DBTCShiny). Biodiversity Data Journal.
 }
 \seealso{
 dada_implement()
@@ -111,9 +109,4 @@ combine_reduced_output()
 }
 \author{
 Robert G. Young
-This function takes a BLAST result file and associated fasta files (either on
-their own or with accompanying ASV files generated from the dada_implement
-function) and collapses the multiple BLAST results into as single result for
-each query sequence. When an ASV table is present the taxonomic results will
-be combined with the ASV table.
 }

@@ -15,19 +15,19 @@ seq_BLAST(
 }
 \arguments{
 \item{databasePath}{The location of a file in a directory where the desired
-BLAST database is located.}
+BLAST database is located (Default NULL).}
 
-\item{querySeqPath}{The local path for the directory containing all of the
-fasta files wishing to be BLASTed}
+\item{querySeqPath}{The location of a file in a directory containing all of the
+fasta files wishing to be BLASTed (Default NULL)}
 
-\item{blastnPath}{The location of the NCBI blast+ blastn program (default = blastn).}
+\item{blastnPath}{The location of the NCBI blast+ blastn program (Default 'blastn').}
 
-\item{minLen}{The minimum length of the sequences that will be BLASTed (default = 100).}
+\item{minLen}{The minimum length of the sequences that will be BLASTed (Default 100).}
 
 \item{BLASTResults}{The number of returned results, or the depth of the reported
-results, saved from the BLAST (default = 250).}
+results, saved from the BLAST (Default 200).}
 
-\item{numCores}{The number of cores used to run the function (default = 1,
+\item{numCores}{The number of cores used to run the function (Default 1,
 Windows systems can only use a single core).}
 }
 \value{
@@ -36,7 +36,7 @@ file for each of the fasta files in the target directory.
 }
 \description{
 This function takes fasta files as input along with a user selected NCBI
-formatted library to BLAST sequences against. The outcome of the function are
+formatted database to BLAST sequences against. The outcome of the function are
 two files, a BLAST run file and a single file containing all of the BLAST
 results in tab delimited format (Note: there are no headers but the columns
 are, query sequence ID, search sequence ID, search taxonomic ID, query to
@@ -46,11 +46,11 @@ name, query start, query end, search start, search end, e-value.
 \details{
 The user input provides a location for the BLAST database you would like to
 use by selecting a file in the target directory. Then provide the location
-of the query sequence files by indicating a file in a directory that contains
-the fasta files. Provide the path for the blast+ blastn program. Finally, provide
-the minimum query sequence length to BLAST (Default = 100), the depth of the BLAST
-returned results (default = 250), and finally the number of cores to process
-the function (default = 1, Windows implementation will only accept this value
+of the query sequence file(s) by indicating a file in a directory that contains
+the fasta file(s) of interest. Provide the path for the blast+ blastn program. Finally, provide
+the minimum query sequence length to BLAST (Default 100), the depth of the BLAST
+returned results (default 200), and finally the number of cores to process
+the function (Default 1, Windows implementation will only accept this value
 as 1).
 }
 \note{
@@ -75,14 +75,15 @@ or folder naming:
 \examples{
 \dontrun{
 seq_BLAST()
-seq_BLAST(databasePath = NULL, querySeqPath=NULL,  blastnPath="blastn",
-minLen = 100, BLASTResults=200, numCores=1)
+seq_BLAST(databasePath = NULL, querySeqPath = NULL,  blastnPath = "blastn",
+minLen = 100, BLASTResults = 200, numCores = 1)
 }
 
 }
 \references{
 <https://github.com/rgyoung6/DBTC>
-Young, R. G., Hanner, R. H. (Submitted October 2023). Title Here. Biodiversity Data Journal.
+Young, R. G., Hanner, R. H. (Submitted October 2023). Dada-BLAST-Taxon Assign-Condense
+Shiny Application (DBTCShiny). Biodiversity Data Journal.
 }
 \seealso{
 dada_implement()

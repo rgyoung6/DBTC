@@ -4,11 +4,15 @@
 \alias{combine_reduced_output}
 \title{Combine Reduce Taxa Files for the Same Biological Samples using Different Markers}
 \usage{
-combine_reduced_output(fileLoc = NULL)
+combine_reduced_output(fileLoc = NULL, presenceAbsence = TRUE)
 }
 \arguments{
 \item{fileLoc}{The location of a file in a directory where all of the 'taxa_assign'
-and/or 'combined_taxa_assign' files are located.}
+and/or 'combined_taxa_assign' files are located (Default NULL).}
+
+\item{presenceAbsence}{This setting is a TRUE or FASLE value that indicates
+if the results will include read counts or be reduced to 0/1 presence absence values
+(Default TRUE)}
 }
 \value{
 This function produces a single 'YYYY_MM_DD_HHMM_CombineTaxaReduced' file and
@@ -17,7 +21,7 @@ associated summary file in the target directory.
 \description{
 This function takes a file selection and then uses all 'taxaReduced' files
 in that directory and combines them into a single taxa table file with presence
-absence results._CombineTaxaReduced.tsv
+absence results.The output file is named with the string _CombineTaxaReduced.tsv
 }
 \details{
 The User Input: This function requires a file in a directory where all 'taxaReduced'
@@ -49,13 +53,14 @@ or folder naming:
 \examples{
 \dontrun{
 combine_reduced_output()
-combine_reduced_output(fileLoc = NULL)
+combine_reduced_output(fileLoc = NULL, presenceAbsence = TRUE)
 }
 
 }
 \references{
 <https://github.com/rgyoung6/DBTC>
-Young, R. G., Hanner, R. H. (Submitted October 2023). Title Here. Biodiversity Data Journal.
+Young, R. G., Hanner, R. H. (Submitted October 2023). Dada-BLAST-Taxon Assign-Condense
+Shiny Application (DBTCShiny). Biodiversity Data Journal.
 }
 \seealso{
 dada_implement()

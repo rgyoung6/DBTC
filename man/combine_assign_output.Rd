@@ -8,14 +8,14 @@ combine_assign_output(fileLoc = NULL, numCores = 1)
 }
 \arguments{
 \item{fileLoc}{The location of a file in a directory where all of the 'taxaAssign'
-files are located.}
+files are located (Default NULL).}
 
-\item{numCores}{The number of cores used to run the function (default = 1,
-Windows systems can only use a single core).}
+\item{numCores}{The number of cores used to run the function (Default 1,
+Windows systems can only use a single core)}
 }
 \value{
-This function produces a '2023_08_03_0913_taxaAssignCombined.tsv' and
-a '2023_08_03_0913_taxaAssignCombined.txt' file in the selected target
+This function produces a 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' and
+a 'YYYY_MM_DD_HHMM_taxaAssignCombined.txt' file in the selected target
 directory.
 }
 \description{
@@ -55,7 +55,8 @@ combine_assign_output(fileLoc = NULL,   numCores = 1)
 }
 \references{
 <https://github.com/rgyoung6/DBTC>
-Young, R. G., Hanner, R. H. (Submitted October 2023). Title Here. Biodiversity Data Journal.
+Young, R. G., Hanner, R. H. (Submitted October 2023). Dada-BLAST-Taxon Assign-Condense
+Shiny Application (DBTCShiny). Biodiversity Data Journal.
 }
 \seealso{
 dada_implement()

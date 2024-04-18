@@ -40,7 +40,7 @@
 #' The output from this function includes three files.
 #' 1. YYYY_MM_DD_HHMM_combinedDada.tsv - combined ASV table
 #' 2. YYYY_MM_DD_HHMM_combinedDada.fas - combined fasta file
-#' 3. YYYY_MM_DD_HHMM_combinedDada.tsv - Summary file from the combine_dada_output run
+#' 3. YYYY_MM_DD_HHMM_combinedDada.txt - Summary file from the combine_dada_output run
 #'
 #' @references
 #' <https://github.com/rgyoung6/DBTC>

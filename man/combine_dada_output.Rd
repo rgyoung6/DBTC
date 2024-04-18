@@ -7,20 +7,20 @@
 combine_dada_output(fileLoc = NULL, minLen = 100)
 }
 \arguments{
-\item{fileLoc}{Select a file in the file folder with dada results you would
+\item{fileLoc}{Select a file in the file folder with dada_implement() results you would
 like to combine (YYYY_MM_DD_HHMM_FileName_MergeFwdRev OR
-YYYY_MM_DD_HHMM_FileName_Merge both .tsv and .fas files.}
+YYYY_MM_DD_HHMM_FileName_Merge both .tsv and .fas files (Default NULL).}
 
-\item{minLen}{The minimum final desired length of the read (Default minLen = 100).}
+\item{minLen}{The minimum final desired length of the read (Default 100).}
 }
 \value{
 The output from this function includes three files.
 1. YYYY_MM_DD_HHMM_combinedDada.tsv - combined ASV table
 2. YYYY_MM_DD_HHMM_combinedDada.fas - combined fasta file
-3. YYYY_MM_DD_HHMM_combinedDada.tsv - Summary file from the combine_dada_output run
+3. YYYY_MM_DD_HHMM_combinedDada.txt - Summary file from the combine_dada_output run
 }
 \description{
-This function uses DBTC Dada ASV output files
+This function uses DBTC dada_implement ASV output files
 (YYYY_MM_DD_HH_MM_UserInputRunName_Merge,
 YYYY_MM_DD_HH_MM_UserInputRunName_MergeFwdRev, and/or
 YYYY_MM_DD_HH_MM_UserInputRunName_TotalTable) and combines them into a single
@@ -32,7 +32,7 @@ naming convention YYYY_MM_DD_HH_MM_combinedDada.
 }
 \details{
 Two or more files to be combined are required as input for this function.
-These files need to be ASV files as outputted from the dada_inplement() and
+These files need to be ASV files as outputted from the dada_implement() and
 can include Merge, MergeFwdRev, or TotalTable.tsv files.
 In addition, the user can input the desired minimum length of sequences that
 are wanted in the output combined file.
@@ -65,7 +65,8 @@ combine_dada_output(fileLoc = NULL, minLen = 100)
 }
 \references{
 <https://github.com/rgyoung6/DBTC>
-Young, R. G., Hanner, R. H. (Submitted October 2023). Title Here. Biodiversity Data Journal.
+Young, R. G., Hanner, R. H. (Submitted October 2023). Dada-BLAST-Taxon Assign-Condense
+Shiny Application (DBTCShiny). Biodiversity Data Journal.
 }
 \seealso{
 dada_implement()

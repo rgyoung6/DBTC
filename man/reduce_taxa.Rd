@@ -8,10 +8,10 @@ reduce_taxa(fileLoc = NULL, numCores = 1)
 }
 \arguments{
 \item{fileLoc}{The location of a file in a directory where all of the 'taxaAssign'
-and/or 'taxaAssignCombine' files are located.}
+and/or 'taxaAssignCombine' files are located (Default NULL).}
 
-\item{numCores}{The number of cores used to run the function (default = 1,
-Windows systems can only use a single core).}
+\item{numCores}{The number of cores used to run the function (Default 1,
+Windows systems can only use a single core)}
 }
 \value{
 This function produces a 'taxa_reduced' file for every 'taxaAssign' or
@@ -20,13 +20,13 @@ This function produces a 'taxa_reduced' file for every 'taxaAssign' or
 \description{
 This function takes a file selection and then uses all 'taxaAssign' and/or
 'taxaAssignCombine' files in that directory and reduces all ASV with the same
-taxonomic assignment into a single result and places these results in a
+taxonomic assignment into a single taxonomic result and places these results in a
 'taxaReduced' file for each of the target files in the directory.
 }
 \details{
 This function requires a file in a directory where all 'taxaAssign'
 and/or 'taxaAssignCombine' files in that directory will be combined. All records
-with the same taxonomic result will be combined. The BLAST values in parentheses
+with the same dicument with the same taxonomic result will be combined. The values in parentheses
 ("Num_Rec", "Coverage", "Identity", "Max_eVal") are combine by the mean number of records,
 the minimum coverage and identity, and the maximum eValue.
 }
@@ -58,7 +58,8 @@ reduce_taxa(fileLoc = NULL,   numCores = 1)
 }
 \references{
 <https://github.com/rgyoung6/DBTC>
-Young, R. G., Hanner, R. H. (Submitted October 2023). Title Here. Biodiversity Data Journal.
+Young, R. G., Hanner, R. H. (Submitted October 2023). Dada-BLAST-Taxon Assign-Condense
+Shiny Application (DBTCShiny). Biodiversity Data Journal.
 }
 \seealso{
 dada_implement()

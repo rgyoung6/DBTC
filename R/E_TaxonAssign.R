@@ -36,7 +36,7 @@
 #' @param taxaDBLoc The location of the NCBI taxonomic data base (Default NULL;
 #' for accessionTaxa.sql see the main DBTC page for details).
 #' @param numCores The number of cores used to run the function (Default 1,
-#' Windows systems can only use a single core)
+#' Windows systems can only use a single core).
 #' @param coverage The percent coverage used for taxonomic assignment for the
 #' above threshold results (Default 95).
 #' @param ident The percent identity used for the taxonomic assignment for above
@@ -126,6 +126,9 @@ taxon_assign<- function(fileLoc = NULL, taxaDBLoc = NULL, numCores = 1, coverage
   startTime <- paste0("Start time...", Sys.time())
   dateStamp <- paste0(format(Sys.time(), "%Y_%m_%d_%H%M"))
 
+  #Write start time to the summary file
+  suppressWarnings(write(paste0(dateStamp, " Start"), file = paste0(dateStamp, "_taxaAssign.txt"), append = FALSE))
+
   #Setting up the table of BLAST results to work through (with at times associated asv tables)
   files <- list.files(path = fileLoc, pattern = "*[.]*")
   fullPathFiles<-list.files(path = fileLoc, pattern = "*[.]*", full.names = TRUE)
@@ -177,6 +180,17 @@ taxon_assign<- function(fileLoc = NULL, taxaDBLoc = NULL, numCores = 1, coverage
         for(fileCounter in 1:nrow(filesList)){
 
           if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 4")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 4"), file = auditFile, append = TRUE))}
+
+          #Add the file name and processing details to the run file
+          suppressWarnings(write(paste0("File Start Time - ", filesList[fileCounter,1], " at ", format(Sys.time(), "%Y_%m_%d %H:%M:%S")), file = paste0(dateStamp, "_taxaAssign.txt"), append = TRUE))
+          suppressWarnings(write(paste0("taxaDBLoc - ", taxaDBLoc), file = paste0(dateStamp, "_taxaAssign.txt"), append = TRUE))
+          suppressWarnings(write(paste0("numCores - ", numCores), file = paste0(dateStamp, "_taxaAssign.txt"), append = TRUE))
+          suppressWarnings(write(paste0("coverage - ", coverage), file = paste0(dateStamp, "_taxaAssign.txt"), append = TRUE))
+          suppressWarnings(write(paste0("ident - ", ident), file = paste0(dateStamp, "_taxaAssign.txt"), append = TRUE))
+          suppressWarnings(write(paste0("propThres - ", propThres), file = paste0(dateStamp, "_taxaAssign.txt"), append = TRUE))
+          suppressWarnings(write(paste0("coverReportThresh - ", coverReportThresh), file = paste0(dateStamp, "_taxaAssign.txt"), append = TRUE))
+          suppressWarnings(write(paste0("identReportThresh - ", identReportThresh), file = paste0(dateStamp, "_taxaAssign.txt"), append = TRUE))
+          suppressWarnings(write(paste0("includeAllDada - ", includeAllDada), file = paste0(dateStamp, "_taxaAssign.txt"), append = TRUE))
 
           #Read in the BLAST results for the file in this loop
           blastResults <- read.delim(filesList[fileCounter,2], header = FALSE)
@@ -666,6 +680,10 @@ taxon_assign<- function(fileLoc = NULL, taxaDBLoc = NULL, numCores = 1, coverage
 
           if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 19")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 19"), file = auditFile, append = TRUE))}
           print(paste0("End of this loop ", fileCounter, " of ", nrow(filesList), " at ", Sys.time()))
+
+          #Print to the run file
+          suppressWarnings(write(paste0("File End Time - ", filesList[fileCounter,1], " at ", format(Sys.time(), "%Y_%m_%d %H:%M:%S")), file = paste0(dateStamp, "_taxaAssign.txt"), append = TRUE))
+          suppressWarnings(write(paste0("*************************************************************************************"), file = paste0(dateStamp, "_taxaAssign.txt"), append = TRUE))
 
         }#end of the loop
         if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 20")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 20"), file = auditFile, append = TRUE))}

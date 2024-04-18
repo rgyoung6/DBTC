@@ -1,14 +1,13 @@
 # Written by Rob Young at the University of Guelph in Ontario Canada, April, 2024
 # ******************************************************************************
 # Roxygen2 Documentation:
-#' @export
-#'
+#
 # DBTC Packages
 #' @import dada2
 #' @import taxonomizr
 #' @import pbapply
 #' @import utils
-
+#'
 # DBTC Functions
 #' @importFrom plyr rbind.fill
 #' @importFrom ShortRead readFastq
@@ -19,6 +18,8 @@
 #' @importFrom stats reshape
 #' @importFrom ggplot2 ggsave
 #'
+# Export the dada_implement() function
+#' @export
 #'
 #' @title Dada Implement
 #'
