@@ -2,7 +2,7 @@
 DBTC is an R implementation of Dada2 and a BLAST approach to metabarcoding analysis.
 
 # Description
-This package contains the DBTC functions for metabarcoding and BLASTing unknown sequences (See documentation here and tutorials and development versions on GitHub at [DBTC](https://github.com/rgyoung6/DBTC). The Dada-BLAST-Taxon Assign-Condense package contains the foundational [DBTC](https://github.com/rgyoung6/DBTC) functions run through the R command line. The DBTC functions have four main outcomes...
+This package contains the DBTC functions for metabarcoding and BLASTing unknown sequences (See documentation here and on GitHub at [DBTC](https://github.com/rgyoung6/DBTC). The Dada-BLAST-Taxon Assign-Condense package contains the foundational [DBTC](https://github.com/rgyoung6/DBTC) functions run through the R command line (But also see [DBTCShiny](https://github.com/rgyoung6/DBTCShiny) and [DBTCShinyTutorial](https://github.com/rgyoung6/DBTCShinyTutorial). The DBTC functions have four main outcomes...
 
   - [Fastq](https://en.wikipedia.org/wiki/FASTQ_format) file processing using Dada in R
   - Using the Basic Local Alignment Search Tool ([BLAST](https://en.wikipedia.org/wiki/BLAST_(biotechnology))), amplicon sequence variants ([ASV](https://en.wikipedia.org/wiki/Amplicon_sequence_variant)) can be searched against local NCBI or custom libraries
@@ -10,6 +10,8 @@ This package contains the DBTC functions for metabarcoding and BLASTing unknown 
   - Condense the resulting ASV taxonomic assignment tables to unique taxa with the ability to combine datasets (using different sequence libraries for the same reads, or results from the same samples for different molecular regions) into a combined results table
 
 **NOTE:** While the DBTC package has been built for the analysis of high-throughput sequencing results, the BLAST and taxonomic assignment, taxonomic condense can be utilized with single specimen Sanger sequencing data.
+
+Also see [DBTCShiny](https://github.com/rgyoung6/DBTCShiny) and the associated [DBTCShinyTutorial](https://github.com/rgyoung6/DBTCShinyTutorial).
 
 # Table of Contents  
 - [Installation](#installation)
