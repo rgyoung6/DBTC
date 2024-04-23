@@ -201,9 +201,11 @@ Also, special characters should be avoided (including question mark, number sign
 There are several key character strings used in the DBTC pipeline, the presence of these strings in file or folder names will cause errors when running DBTC functions. 
 The following strings are those used in DBTC and should not be used in file or folder naming:
   - _BLAST
+  - _combinedDada
   - _taxaAssign
-  - _taxaCombined
+  - _taxaAssignCombined
   - _taxaReduced
+  - _CombineTaxaReduced
 
 ([Back to Top](#table-of-contents))
 
