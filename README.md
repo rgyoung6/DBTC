@@ -93,12 +93,12 @@ NCBI BLASTable databases can be established through two methods.
 ### Create a custom sequence database to BLAST against
 In addition to the NCBI resources, DBTC can also use custom databases. To establish these databases you will require a [Fasta](https://en.wikipedia.org/wiki/FASTA_format) file with the desired records with [MACER](https://github.com/rgyoung6/MACER) formatted headers. The [MACER](https://github.com/rgyoung6/MACER) R package and instructions can be found at either of the two locations:
 
-[MACER CRAN](https://cran.r-project.org/web/packages/MACER/index.html)
+[MACER CRAN](https://CRAN.R-project.org/package=MACER)
 
 [MACER GitHub](https://github.com/rgyoung6/MACER) (will have the most recent version and development versions)
 
 ### Create a local NCBI taxonomy database to assign taxonomic identifications to BLAST results
-In the 'Preparation' section of the [taxonomizr website](https://cran.r-project.org/web/packages/taxonomizr/vignettes/usage.html), use the instructions and the prepareDatabase('accessionTaxa.sql', getAccessions = FALSE) taxonomizr command to establish a local taxonomy database.
+In the 'Preparation' section of the [taxonomizr website](https://CRAN.R-project.org/package=taxonomizr), use the instructions and the prepareDatabase('accessionTaxa.sql', getAccessions = FALSE) taxonomizr command to establish a local taxonomy database.
 ```
 prepareDatabase('accessionTaxa.sql', getAccessions = FALSE)
 ```
