@@ -168,6 +168,7 @@ DBTC dada_implement() uses [ASV](https://en.wikipedia.org/wiki/Amplicon_sequence
 This function takes a [fasta](https://en.wikipedia.org/wiki/FASTA_format) file with headers in the MACER format (Young et al. 2021) and establishes a database upon which a BLAST search can be completed. However, if a NCBI sequence database is desired, it is advisable to use, where applicable, NCBI preformatted databases and skip the make_BLAST_DB() function (https://www.ncbi.nlm.nih.gov/books/NBK62345/#blast_ftp_site.The_blastdb_subdirectory). The outcome of the function is a folder with a BLASTable NCBI formatted sequence database.
 
 The MACER [fasta](https://en.wikipedia.org/wiki/FASTA_format) header format
+
 ```>GenBankAccessionOrBOLDID|GenBankAccession|Genus|species|UniqueID|Marker```
 
 ## seq_BLAST()
