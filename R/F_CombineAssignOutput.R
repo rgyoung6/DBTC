@@ -26,6 +26,8 @@
 #' files are located (Default NULL).
 #' @param numCores The number of cores used to run the function (Default 1,
 #' Windows systems can only use a single core)
+#' @param verbose If set to TRUE then there will be output to the R console, if
+#' FALSE then this reporting data is suppressed.
 #'
 #' @returns
 #' This function produces a 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' and
@@ -38,23 +40,27 @@
 #' Shiny Application (DBTCShiny). Biodiversity Data Journal.
 #'
 #' @note
-#' When running DBTC functions the paths for the files selected cannot have
-#' whitespace! File folder locations should be as short as possible (close to
-#' the root directory) as some functions do not process long naming conventions.
-#' Also, special characters should be avoided (including question mark, number
-#' sign, exclamation mark). It is recommended that dashes be used for
-#' separations in naming conventions while retaining underscores for use as
-#' information delimiters (this is how DBTC functions use underscore). There
-#' are several key character strings used in the DBTC pipeline, the presence of
-#' these strings in file or folder names will cause errors when running DBTC
-#' functions.
+#' WARNING - NO WHITESPACE!
 #'
-#' The following strings are those used in DBTC and should not be used in file
-#' or folder naming:
+#' When running DBTC functions the paths for the files selected cannot have white
+#' space! File folder locations should be as short as possible (close to the root
+#' as some functions do not process long naming conventions.
+#'
+#' Also, special characters should be avoided (including question mark, number
+#' sign, exclamation mark). It is recommended that dashes be used for separations
+#' in naming conventions while retaining underscores for use as information
+#' delimiters (this is how DBTC functions use underscore).
+#'
+#' There are several key character strings used in the DBTC pipeline, the presence
+#' of these strings in file or folder names will cause errors when running DBTC functions.
+#'
+#' The following strings are those used in DBTC and should not be used in file or folder naming:
 #' - _BLAST
+#' - _combinedDada
 #' - _taxaAssign
-#' - _taxaCombined
+#' - _taxaAssignCombined
 #' - _taxaReduced
+#' - _CombineTaxaReduced
 #'
 #' @seealso
 #' dada_implement()
@@ -66,7 +72,7 @@
 #' combine_reduced_output()
 #'
 ################################ COMBINE TWO REDUCED TAXA FILES INTO A SINGLE FILE ##################
-combine_assign_output <- function(fileLoc = NULL,   numCores = 1){
+combine_assign_output <- function(fileLoc = NULL,   numCores = 1, verbose = TRUE){
 
   #Get the initial working directory
   start_wd <- getwd()
@@ -74,28 +80,32 @@ combine_assign_output <- function(fileLoc = NULL,   numCores = 1){
 
   #load in the files list
   if (is.null(fileLoc)){
-    print("Select a file in the file folder with the taxa assigned files")
-    print("you would like to combine (extension '_taxaAssign_YYYY_MM_DD_HHMM.tsv').")
-    print("*** NOTE: all '_taxaAssign_' files in the folder location should")
-    print("originate from the same dada output file but have outputs from different")
-    print("BLAST sequence libraries and therefore conatin the same ASVs ***")
+    if(verbose){
+      print("Select a file in the file folder with the taxa assigned files")
+      print("you would like to combine (extension '_taxaAssign_YYYY_MM_DD_HHMM.tsv').")
+      print("*** NOTE: all '_taxaAssign_' files in the folder location should")
+      print("originate from the same dada output file but have outputs from different")
+      print("BLAST sequence libraries and therefore conatin the same ASVs ***")
+    }
     fileLoc <- file.choose()
   }
   if (is.null(fileLoc)){
-
-    print("********************************************************************************")
-    print("The file location is required and needs to be submited as an argument 'fileLoc'")
-    print("when calling the combine_ouput() function or when prompted to select the folder")
-    print("through a popup window (where available).")
-    print("Please rerun the function and provide a character string for the fileLoc")
-    print("argument.")
-    print(paste0("Current file location (fileLoc) is: ", fileLoc))
-    print("********************************************************************************")
-
+    if(verbose){
+      print("********************************************************************************")
+      print("The file location is required and needs to be submited as an argument 'fileLoc'")
+      print("when calling the combine_ouput() function or when prompted to select the folder")
+      print("through a popup window (where available).")
+      print("Please rerun the function and provide a character string for the fileLoc")
+      print("argument.")
+      print(paste0("Current file location (fileLoc) is: ", fileLoc))
+      print("********************************************************************************")
+    }
   }else{
 
     #Printing the start time
-    print(paste0("Start time...", Sys.time()))
+    if(verbose){
+      print(paste0("Start time...", Sys.time()))
+    }
     startTime <- paste0("Start time...", Sys.time())
     dateStamp <- paste0(format(Sys.time(), "%Y_%m_%d_%H%M"))
 
@@ -125,18 +135,19 @@ combine_assign_output <- function(fileLoc = NULL,   numCores = 1){
     suppressWarnings(write.table(files, file = paste0(dateStamp, "_taxaAssignCombined.txt"), append = TRUE, na = "NA", row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t"))
 
     if(nrow(files)<2){
-
-      print("********************************************************************************")
-      print("There is only one file in the target directory for the file type and so ")
-      print("the combination of files is not needed.")
-      print("********************************************************************************")
-
+      if(verbose){
+        print("********************************************************************************")
+        print("There is only one file in the target directory for the file type and so ")
+        print("the combination of files is not needed.")
+        print("********************************************************************************")
+      }
     }else{
 
       #Initiate totalResults final data frame
       totalResults = NULL
-
-      print(paste0("Reading in all of the submitted files at... ", Sys.time()))
+      if(verbose){
+        print(paste0("Reading in all of the submitted files at... ", Sys.time()))
+      }
       suppressWarnings(write(paste0("Reading in all of the submitted files at... ",Sys.time()), file = paste0(dateStamp, "_taxaAssignCombined.txt"), append = TRUE))
 
       #Load in all of the records
@@ -154,12 +165,18 @@ combine_assign_output <- function(fileLoc = NULL,   numCores = 1){
           if(identical(colnames(loopResult),colnames(totalResults))){
             totalResults<-rbind(totalResults, loopResult)
           }else{
-            stop("The files that you have submitted are not from the same root file as they do not have the same headers (samples). Please check the files and resubmit.")
+            if(verbose){
+              stop("The files that you have submitted are not from the same root file as they do not have the same headers (samples). Please check the files and resubmit.")
+            }else{
+              stop()
+            }
           }
         }
       }#End of the loop through the files and loading the files
 
-      print(paste0("Completed reading the submitted files at... ", Sys.time()))
+      if(verbose){
+        print(paste0("Completed reading the submitted files at... ", Sys.time()))
+      }
       suppressWarnings(write(paste0("Completed reading the submitted files at... ",Sys.time()), file = paste0(dateStamp, "_taxaAssignCombined.txt"), append = TRUE))
 
       #Remove unnecessary loop variable
@@ -171,7 +188,9 @@ combine_assign_output <- function(fileLoc = NULL,   numCores = 1){
       #Initiate finalResults final data frame
       finalResults = NULL
 
-      print(paste0("Begin looping through the unique reads at... ", Sys.time()))
+      if(verbose){
+        print(paste0("Begin looping through the unique reads at... ", Sys.time()))
+      }
       suppressWarnings(write(paste0("Begin looping through the unique reads at... ",Sys.time()), file = paste0(dateStamp, "_taxaAssignCombined.txt"), append = TRUE))
 
 
@@ -185,15 +204,8 @@ combine_assign_output <- function(fileLoc = NULL,   numCores = 1){
         #Check to see if there are records other than NA in the Final_Taxa column
         if(nrow(loopResult[!is.na(loopResult$Final_Taxa),, drop = FALSE]) == 0){
 
-
-          #print(paste0("Record...", loopResult[1,"uniqueID"], " all NA with rows...", nrow(loopResult)))
-
-
           #If after the removal of duplicate records there is more than one record
           if(nrow(loopResult[!duplicated(loopResult[,3:ncol(loopResult)]), , drop=FALSE]) > 1){
-
-            #print(paste0("Record...", loopResult[1,"uniqueID"], " more than 1 derep with rows...", nrow(loopResult)))
-
 
             #Choose the best record from this set where the taxa is NA
             loopResult<-loopResult[which.max(rowSums(!is.na(loopResult[,c(1:18)]))),, drop=FALSE]
@@ -212,8 +224,6 @@ combine_assign_output <- function(fileLoc = NULL,   numCores = 1){
             }
 
           }else{ #Else if there is only a single dereplicated records that is NA for taxa
-
-            #print(paste0("Here is the loop record...", loopResult[1,"uniqueID"], " and the number of rows of loopResult...", nrow(loopResult)))
 
             #Take the loopResultFiles and combine into a single variable and
             #Change the first row File variable to the combined value
@@ -297,27 +307,35 @@ combine_assign_output <- function(fileLoc = NULL,   numCores = 1){
 
       }#End of looping through the unique reads
 
-
-
       if(numCores==1){
 
-        finalResults <- pbapply::pblapply(seq_len(length(uniqueRecords)), taxaResults)
+        if(verbose){
+          finalResults <- pbapply::pblapply(seq_len(length(uniqueRecords)), taxaResults)
+        }else{
+          finalResults <- lapply(seq_len(length(uniqueRecords)), taxaResults)
+        }
 
       }else{
-
-        finalResults <- pbapply::pblapply(seq_len(length(uniqueRecords)), taxaResults, cl = numCores)
+        if(verbose){
+          finalResults <- pbapply::pblapply(seq_len(length(uniqueRecords)), taxaResults, cl = numCores)
+        }else{
+          finalResults <- parallel::mclapply(seq_len(length(uniqueRecords)), taxaResults, mc.cores = numCores)
+        }
 
       }
 
       finalResults <- do.call(rbind.data.frame, finalResults)
 
-      print(paste0("The end looping through the unique reads at... ", Sys.time()))
+      if(verbose){
+        print(paste0("The end looping through the unique reads at... ", Sys.time()))
+      }
       suppressWarnings(write(paste0("The end looping through the unique reads at... ",Sys.time()), file = paste0(dateStamp, "_taxaAssignCombined.txt"), append = TRUE))
 
       #Export the results
       suppressWarnings(write.table(finalResults, file = paste0(dateStamp, "_taxaAssignCombined.tsv"), append = FALSE, na = "NA", row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t"))
-
-      print(paste0(startTime, " End time ", Sys.time()))
+      if(verbose){
+        print(paste0(startTime, " End time ", Sys.time()))
+      }
       suppressWarnings(write(paste0(startTime, " End time ", Sys.time()), file = paste0(dateStamp, "_taxaAssignCombined.txt"), append = TRUE))
 
     } #End of the if/else there are more than 2 files

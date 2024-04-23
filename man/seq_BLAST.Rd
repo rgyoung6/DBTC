@@ -10,7 +10,8 @@ seq_BLAST(
   blastnPath = "blastn",
   minLen = 100,
   BLASTResults = 200,
-  numCores = 1
+  numCores = 1,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -29,6 +30,9 @@ results, saved from the BLAST (Default 200).}
 
 \item{numCores}{The number of cores used to run the function (Default 1,
 Windows systems can only use a single core).}
+
+\item{verbose}{If set to TRUE then there will be output to the R console, if
+FALSE then this reporting data is suppressed.}
 }
 \value{
 Two files are produced from this function, a BLAST run file and a BLAST results
@@ -54,23 +58,27 @@ the function (Default 1, Windows implementation will only accept this value
 as 1).
 }
 \note{
-When running DBTC functions the paths for the files selected cannot have
-whitespace! File folder locations should be as short as possible (close to
-the root directory) as some functions do not process long naming conventions.
-Also, special characters should be avoided (including question mark, number
-sign, exclamation mark). It is recommended that dashes be used for
-separations in naming conventions while retaining underscores for use as
-information delimiters (this is how DBTC functions use underscore). There
-are several key character strings used in the DBTC pipeline, the presence of
-these strings in file or folder names will cause errors when running DBTC
-functions.
+WARNING - NO WHITESPACE!
 
-The following strings are those used in DBTC and should not be used in file
-or folder naming:
+When running DBTC functions the paths for the files selected cannot have white
+space! File folder locations should be as short as possible (close to the root
+as some functions do not process long naming conventions.
+
+Also, special characters should be avoided (including question mark, number
+sign, exclamation mark). It is recommended that dashes be used for separations
+in naming conventions while retaining underscores for use as information
+delimiters (this is how DBTC functions use underscore).
+
+There are several key character strings used in the DBTC pipeline, the presence
+of these strings in file or folder names will cause errors when running DBTC functions.
+
+The following strings are those used in DBTC and should not be used in file or folder naming:
 - _BLAST
+- _combinedDada
 - _taxaAssign
-- _taxaCombined
+- _taxaAssignCombined
 - _taxaReduced
+- _CombineTaxaReduced
 }
 \examples{
 \dontrun{

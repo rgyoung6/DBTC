@@ -43,6 +43,8 @@
 #' results, saved from the BLAST (Default 200).
 #' @param numCores The number of cores used to run the function (Default 1,
 #' Windows systems can only use a single core).
+#' @param verbose If set to TRUE then there will be output to the R console, if
+#' FALSE then this reporting data is suppressed.
 #'
 #' @returns
 #' Two files are produced from this function, a BLAST run file and a BLAST results
@@ -54,23 +56,27 @@
 #' Shiny Application (DBTCShiny). Biodiversity Data Journal.
 #'
 #' @note
-#' When running DBTC functions the paths for the files selected cannot have
-#' whitespace! File folder locations should be as short as possible (close to
-#' the root directory) as some functions do not process long naming conventions.
-#' Also, special characters should be avoided (including question mark, number
-#' sign, exclamation mark). It is recommended that dashes be used for
-#' separations in naming conventions while retaining underscores for use as
-#' information delimiters (this is how DBTC functions use underscore). There
-#' are several key character strings used in the DBTC pipeline, the presence of
-#' these strings in file or folder names will cause errors when running DBTC
-#' functions.
+#' WARNING - NO WHITESPACE!
 #'
-#' The following strings are those used in DBTC and should not be used in file
-#' or folder naming:
+#' When running DBTC functions the paths for the files selected cannot have white
+#' space! File folder locations should be as short as possible (close to the root
+#' as some functions do not process long naming conventions.
+#'
+#' Also, special characters should be avoided (including question mark, number
+#' sign, exclamation mark). It is recommended that dashes be used for separations
+#' in naming conventions while retaining underscores for use as information
+#' delimiters (this is how DBTC functions use underscore).
+#'
+#' There are several key character strings used in the DBTC pipeline, the presence
+#' of these strings in file or folder names will cause errors when running DBTC functions.
+#'
+#' The following strings are those used in DBTC and should not be used in file or folder naming:
 #' - _BLAST
+#' - _combinedDada
 #' - _taxaAssign
-#' - _taxaCombined
+#' - _taxaAssignCombined
 #' - _taxaReduced
+#' - _CombineTaxaReduced
 #'
 #' @seealso
 #' dada_implement()
@@ -82,7 +88,7 @@
 #' combine_reduced_output()
 
 ##################################### BLAST FUNCTION ##############################################################
-seq_BLAST <- function(databasePath = NULL, querySeqPath=NULL,  blastnPath="blastn", minLen = 100, BLASTResults=200, numCores=1){
+seq_BLAST <- function(databasePath = NULL, querySeqPath=NULL,  blastnPath="blastn", minLen = 100, BLASTResults=200, numCores=1, verbose = TRUE){
 
   #If there are issues and I need to audit the script make this 1
   auditScript=0
@@ -92,49 +98,65 @@ seq_BLAST <- function(databasePath = NULL, querySeqPath=NULL,  blastnPath="blast
   on.exit(setwd(start_wd))
 
   #Printing the start time
-  print(paste0("Start time...", Sys.time()))
+  if(verbose){
+    print(paste0("Start time...", Sys.time()))
+  }
   startTime <- paste0("Start time...", Sys.time())
   dateStamp <- paste0(format(Sys.time(), "%Y_%m_%d_%H%M"))
 
   if(is.null(databasePath)){
     #Get the directory with the BLAST data base and set the working directory to the location of the database
-    print(paste0("Select a file in the folder with the NCBI database you would like to use."))
+    if(verbose){
+      print(paste0("Select a file in the folder with the NCBI database you would like to use."))
+    }
     databasePath <- file.choose()
   }
 
   if(is.null(querySeqPath)){
-    print(paste0("Select a file in the folder with the fasta files you would like to BLAST."))
+    if(verbose){
+      print(paste0("Select a file in the folder with the fasta files you would like to BLAST."))
+    }
     querySeqPath<-file.choose()
   }
 
 
   if(is.null(blastnPath)){
-    print(paste0("Select the path for the blastn command."))
+    if(verbose){
+      print(paste0("Select the path for the blastn command."))
+    }
     blastnPath<-file.choose()
   }
 
   if(is.null(databasePath)){
-    print("********************************************************************************")
-    print("A database location is required (databasePath).")
-    print("Please rerun the function and provide a character string for the databasePath")
-    print("argument or select a location when prompted.")
-    print(paste0("Current database name (databasePath) is: ", databasePath))
-    print("********************************************************************************")
+    if(verbose){
+      print("********************************************************************************")
+      print("A database location is required (databasePath).")
+      print("Please rerun the function and provide a character string for the databasePath")
+      print("argument or select a location when prompted.")
+      print(paste0("Current database name (databasePath) is: ", databasePath))
+      print("********************************************************************************")
+    }
   } else if(is.null(BLASTResults)){
-    print("********************************************************************************")
-    print("An integer value for the desired maximum number of BLAST returned results")
-    print("(BLASTResults) is required.")
-    print("Please rerun the function and provide a value for the BLASTResults argument.")
-    print(paste0("Current database name (BLASTResults) is: ", BLASTResults))
-    print("********************************************************************************")
+    if(verbose){
+      print("********************************************************************************")
+      print("An integer value for the desired maximum number of BLAST returned results")
+      print("(BLASTResults) is required.")
+      print("Please rerun the function and provide a value for the BLASTResults argument.")
+      print(paste0("Current database name (BLASTResults) is: ", BLASTResults))
+      print("********************************************************************************")
+    }
   } else if (is.null(querySeqPath)){
-    print("********************************************************************************")
-    print("The query sequence path was not provided. Please select a file and run the function again.")
-    print("********************************************************************************")
+    if(verbose){
+      print("********************************************************************************")
+      print("The query sequence path was not provided. Please select a file and run the function again.")
+      print("********************************************************************************")
+    }
   } else if (grepl(" ",querySeqPath) | grepl(" ",databasePath) | grepl(" ",blastnPath)){
-    print("********************************************************************************")
-    print("Error: One or more of the file paths contains a space in the naming convention. Please change the naming and try again.")
-    print("********************************************************************************")
+    if(verbose){
+      print("********************************************************************************")
+      print("Error: One or more of the file paths contains a space in the naming convention. Please change the naming and try again.")
+      print("********************************************************************************")
+    }
   }else{
 
     querySeqPath<-dirname(querySeqPath)
@@ -159,13 +181,14 @@ seq_BLAST <- function(databasePath = NULL, querySeqPath=NULL,  blastnPath="blast
     if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 1B")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 1B"), file = auditFile, append = TRUE))}
 
     if(length(databaseName) == 0 ){
-      print("********************************************************************************")
-      print("The database location (databasePath) does not appear to contain a BLAST formated database.")
-      print("Please rerun the function and provide an appropriate character string for the databasePath")
-      print("argument or select a proper location when prompted.")
-      print(paste0("Current database name (databaseName) is: ", databaseName))
-      print("********************************************************************************")
-
+      if(verbose){
+        print("********************************************************************************")
+        print("The database location (databasePath) does not appear to contain a BLAST formated database.")
+        print("Please rerun the function and provide an appropriate character string for the databasePath")
+        print("argument or select a proper location when prompted.")
+        print(paste0("Current database name (databaseName) is: ", databaseName))
+        print("********************************************************************************")
+      }
     }else {
 
       #Audit line
@@ -177,13 +200,13 @@ seq_BLAST <- function(databasePath = NULL, querySeqPath=NULL,  blastnPath="blast
       fileNames <- sub("\\..*","", as.vector(fileList))
 
       if(length(pathList)==0){
-
-        print("********************************************************************************")
-        print("There are no fasta (*.FAS or *.FASTA) files in the target directory.")
-        print("Please rerun the function and provide a folder with fasta files.")
-        print(paste0("The current path is... ",querySeqPath ))
-        print("********************************************************************************")
-
+        if(verbose){
+          print("********************************************************************************")
+          print("There are no fasta (*.FAS or *.FASTA) files in the target directory.")
+          print("Please rerun the function and provide a folder with fasta files.")
+          print(paste0("The current path is... ",querySeqPath ))
+          print("********************************************************************************")
+        }
       }else{
 
         #Audit line
@@ -197,22 +220,22 @@ seq_BLAST <- function(databasePath = NULL, querySeqPath=NULL,  blastnPath="blast
 
           #Audit line
           if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 4")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 4"), file = auditFile, append = TRUE))}
-
-          print("********************************************************************************")
-          print(paste0("Beginning the BLASTing of file ",pathList[filesInFolder], " at - ", Sys.time()))
-          print("********************************************************************************")
-
+          if(verbose){
+            print("********************************************************************************")
+            print(paste0("Beginning the BLASTing of file ",pathList[filesInFolder], " at - ", Sys.time()))
+            print("********************************************************************************")
+          }
           #Read in the data from the target file
           seqTable <- read.delim(pathList[filesInFolder], header = FALSE)
 
           if(!grepl(">", seqTable[3,1], fixed = TRUE)){
-
-            print("********************************************************************************")
-            print("The submitted fasta file is not in the single line nucleotide format which is ")
-            print("needed for this script. Please correct the format and rerun this script")
-            print(paste0("for file ",pathList[filesInFolder]))
-            print("********************************************************************************")
-
+            if(verbose){
+              print("********************************************************************************")
+              print("The submitted fasta file is not in the single line nucleotide format which is ")
+              print("needed for this script. Please correct the format and rerun this script")
+              print(paste0("for file ",pathList[filesInFolder]))
+              print("********************************************************************************")
+            }
           }else{
 
             #Audit line
@@ -229,12 +252,12 @@ seq_BLAST <- function(databasePath = NULL, querySeqPath=NULL,  blastnPath="blast
             seqTable <- seqTable[nchar(as.character(seqTable[,2])) > minLen,]
 
             if(nrow(seqTable)==0){
-
-              print("********************************************************************************")
-              print("The submitted fasta file does not have any records to BLAST after applying the ")
-              print("length filter. Please check the data and run it again.")
-              print("********************************************************************************")
-
+              if(verbose){
+                print("********************************************************************************")
+                print("The submitted fasta file does not have any records to BLAST after applying the ")
+                print("length filter. Please check the data and run it again.")
+                print("********************************************************************************")
+              }
             }else{
 
               #Audit line
@@ -245,7 +268,9 @@ seq_BLAST <- function(databasePath = NULL, querySeqPath=NULL,  blastnPath="blast
 
               # Check if the file exists
               while(!file.exists(temp_file)) {
-                print("Writing file please standby!")
+                if(verbose){
+                  print("Writing file please standby!")
+                }
                 # Wait for 1 second
                 Sys.sleep(1)
               }
@@ -293,10 +318,14 @@ seq_BLAST <- function(databasePath = NULL, querySeqPath=NULL,  blastnPath="blast
                     file.rename(from = blastCommandFile,  to = paste0(querySeqPath, "/", blastCommandFile))
                   },
                   error = function(e){
-                    print(paste0("Error - unable to move the BLAST run file (", blastCommandFile, " due to persmissions."))
+                    if(verbose){
+                      print(paste0("Error - unable to move the BLAST run file (", blastCommandFile, " due to persmissions."))
+                    }
                   },
                   warning = function(w){
-                    print(paste0("Warning - unable to move the BLAST run file (", blastCommandFile, " due to persmissions."))
+                    if(verbose){
+                      print(paste0("Warning - unable to move the BLAST run file (", blastCommandFile, " due to persmissions."))
+                    }
                   }
                 )
 
@@ -310,7 +339,7 @@ seq_BLAST <- function(databasePath = NULL, querySeqPath=NULL,  blastnPath="blast
       }#End of the loop going through the fasta files to be BLASTed
     }#End of the check for the length of the databaseName as obtained from the database location.
   }#Closing the if checking for the submitting arguments
-
-  print(paste0("BLAST Complete - Started at ", startTime, " Ended at ", Sys.time()))
-
+  if(verbose){
+    print(paste0("BLAST Complete - Started at ", startTime, " Ended at ", Sys.time()))
+  }
 }#End of the function

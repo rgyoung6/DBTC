@@ -31,6 +31,8 @@
 #' and/or 'taxaAssignCombine' files are located (Default NULL).
 #' @param numCores The number of cores used to run the function (Default 1,
 #' Windows systems can only use a single core)
+#' @param verbose If set to TRUE then there will be output to the R console, if
+#' FALSE then this reporting data is suppressed.
 #'
 #' @returns
 #' This function produces a 'taxa_reduced' file for every 'taxaAssign' or
@@ -42,23 +44,27 @@
 #' Shiny Application (DBTCShiny). Biodiversity Data Journal.
 #'
 #' @note
-#' When running DBTC functions the paths for the files selected cannot have
-#' whitespace! File folder locations should be as short as possible (close to
-#' the root directory) as some functions do not process long naming conventions.
-#' Also, special characters should be avoided (including question mark, number
-#' sign, exclamation mark). It is recommended that dashes be used for
-#' separations in naming conventions while retaining underscores for use as
-#' information delimiters (this is how DBTC functions use underscore). There
-#' are several key character strings used in the DBTC pipeline, the presence of
-#' these strings in file or folder names will cause errors when running DBTC
-#' functions.
+#' WARNING - NO WHITESPACE!
 #'
-#' The following strings are those used in DBTC and should not be used in file
-#' or folder naming:
+#' When running DBTC functions the paths for the files selected cannot have white
+#' space! File folder locations should be as short as possible (close to the root
+#' as some functions do not process long naming conventions.
+#'
+#' Also, special characters should be avoided (including question mark, number
+#' sign, exclamation mark). It is recommended that dashes be used for separations
+#' in naming conventions while retaining underscores for use as information
+#' delimiters (this is how DBTC functions use underscore).
+#'
+#' There are several key character strings used in the DBTC pipeline, the presence
+#' of these strings in file or folder names will cause errors when running DBTC functions.
+#'
+#' The following strings are those used in DBTC and should not be used in file or folder naming:
 #' - _BLAST
+#' - _combinedDada
 #' - _taxaAssign
-#' - _taxaCombined
+#' - _taxaAssignCombined
 #' - _taxaReduced
+#' - _CombineTaxaReduced
 #'
 #' @seealso
 #' dada_implement()
@@ -70,7 +76,7 @@
 #' combine_reduced_output()
 #'
 ################# reduce_taxa FUNCTION #########################################
-reduce_taxa<- function(fileLoc = NULL,   numCores = 1){
+reduce_taxa<- function(fileLoc = NULL,   numCores = 1, verbose = TRUE){
 
   #Get the initial working directory
   start_wd <- getwd()
@@ -78,12 +84,16 @@ reduce_taxa<- function(fileLoc = NULL,   numCores = 1){
 
   #load in the files list
   if (is.null(fileLoc)){
-    print(paste0("Select a file in the file folder with taxon assign files or the taxon assign combined files you would like to reduce (extension '_taxaAssign_YYYY_MM_DD_HHMM.tsv' or '_YYYY_MM_DD_HHMM_taxaAssignCombine.tsv' )."))
+    if(verbose){
+      print(paste0("Select a file in the file folder with taxon assign files or the taxon assign combined files you would like to reduce (extension '_taxaAssign_YYYY_MM_DD_HHMM.tsv' or '_YYYY_MM_DD_HHMM_taxaAssignCombine.tsv' )."))
+    }
     fileLoc <- file.choose()
   }
 
   #Printing the start time
-  print(paste0("Start time...", Sys.time()))
+  if(verbose){
+    print(paste0("Start time...", Sys.time()))
+  }
   startTime <- paste0("Start time...", Sys.time())
   dateStamp <- paste0(format(Sys.time(), "%Y_%m_%d_%H%M"))
 
@@ -105,15 +115,17 @@ reduce_taxa<- function(fileLoc = NULL,   numCores = 1){
 
   for(records in 1:nrow(files)){
 
-    flag = 0
-
-    print(paste0("Started file ", files[records,2], " at ",  format(Sys.time(), "%Y_%m_%d_%H%M")))
-    print(paste0("Reading in file...", files[records,2], " at ",  format(Sys.time(), "%Y_%m_%d_%H%M")))
+    if(verbose){
+      print(paste0("Started file ", files[records,2], " at ",  format(Sys.time(), "%Y_%m_%d_%H%M")))
+      print(paste0("Reading in file...", files[records,2], " at ",  format(Sys.time(), "%Y_%m_%d_%H%M")))
+    }
 
     #Read in the files for this loop
     totalResults <- read.delim(files[records,1], header = TRUE, check.names=FALSE)
 
-    print(paste0("Finished reading in file ", records, " of ", nrow(files), " - ", files[records,2], " at ",  format(Sys.time(), "%Y_%m_%d_%H%M")))
+    if(verbose){
+      print(paste0("Finished reading in file ", records, " of ", nrow(files), " - ", files[records,2], " at ",  format(Sys.time(), "%Y_%m_%d_%H%M")))
+    }
 
     #Get the column indices
     colIndex <- which(names(totalResults) %in% c("uniqueID", "Lowest_Single_Rank", "Lowest_Single_Taxa", "Lowest_Single_Rank_Above_Thres", "Lowest_Single_Taxa_Above_Thres"))
@@ -246,9 +258,17 @@ reduce_taxa<- function(fileLoc = NULL,   numCores = 1){
     } #Closing off the loop through unique taxa
 
     if(numCores==1){
-      finalResults <- pbapply::pblapply(seq_len(length(uniqueTaxa)), taxaResults)
+      if(verbose){
+        finalResults <- pbapply::pblapply(seq_len(length(uniqueTaxa)), taxaResults)
+      }else{
+        finalResults <- lapply(seq_len(length(uniqueTaxa)), taxaResults)
+      }
     }else{
-      finalResults <- pbapply::pblapply(seq_len(length(uniqueTaxa)), taxaResults, cl = numCores)
+      if(verbose){
+        finalResults <- pbapply::pblapply(seq_len(length(uniqueTaxa)), taxaResults, cl = numCores)
+      }else{
+        finalResults <- parallel::mclapply(seq_len(length(uniqueTaxa)), taxaResults, mc.cores = numCores)
+      }
     }
     finalResults <- do.call(rbind, finalResults)
 
@@ -259,7 +279,9 @@ reduce_taxa<- function(fileLoc = NULL,   numCores = 1){
 
   }#Closing off looping through each file in the target directory
 
-  print(paste0(startTime, " end at ", Sys.time()))
+  if(verbose){
+    print(paste0(startTime, " end at ", Sys.time()))
+  }
 
 }#Closing off the function reduce_taxa
 

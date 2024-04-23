@@ -31,6 +31,8 @@
 #' @param presenceAbsence This setting is a TRUE or FASLE value that indicates
 #' if the results will include read counts or be reduced to 0/1 presence absence values
 #' (Default TRUE)
+#' @param verbose If set to TRUE then there will be output to the R console, if
+#' FALSE then this reporting data is suppressed
 #'
 #' @returns
 #' This function produces a single 'YYYY_MM_DD_HHMM_CombineTaxaReduced' file and
@@ -42,23 +44,27 @@
 #' Shiny Application (DBTCShiny). Biodiversity Data Journal.
 #'
 #' @note
-#' When running DBTC functions the paths for the files selected cannot have
-#' whitespace! File folder locations should be as short as possible (close to
-#' the root directory) as some functions do not process long naming conventions.
-#' Also, special characters should be avoided (including question mark, number
-#' sign, exclamation mark). It is recommended that dashes be used for
-#' separations in naming conventions while retaining underscores for use as
-#' information delimiters (this is how DBTC functions use underscore). There
-#' are several key character strings used in the DBTC pipeline, the presence of
-#' these strings in file or folder names will cause errors when running DBTC
-#' functions.
+#' WARNING - NO WHITESPACE!
 #'
-#' The following strings are those used in DBTC and should not be used in file
-#' or folder naming:
+#' When running DBTC functions the paths for the files selected cannot have white
+#' space! File folder locations should be as short as possible (close to the root
+#' as some functions do not process long naming conventions.
+#'
+#' Also, special characters should be avoided (including question mark, number
+#' sign, exclamation mark). It is recommended that dashes be used for separations
+#' in naming conventions while retaining underscores for use as information
+#' delimiters (this is how DBTC functions use underscore).
+#'
+#' There are several key character strings used in the DBTC pipeline, the presence
+#' of these strings in file or folder names will cause errors when running DBTC functions.
+#'
+#' The following strings are those used in DBTC and should not be used in file or folder naming:
 #' - _BLAST
+#' - _combinedDada
 #' - _taxaAssign
-#' - _taxaCombined
+#' - _taxaAssignCombined
 #' - _taxaReduced
+#' - _CombineTaxaReduced
 #'
 #' @seealso
 #' dada_implement()
@@ -70,7 +76,7 @@
 #' reduce_taxa()
 #'
 ################ COMBINE TWO REDUCED TAXA FILES INTO A SINGLE FILE #############
-combine_reduced_output <- function(fileLoc = NULL, presenceAbsence = TRUE){
+combine_reduced_output <- function(fileLoc = NULL, presenceAbsence = TRUE, verbose = TRUE){
 
   #Get the initial working directory
   start_wd <- getwd()
@@ -81,25 +87,29 @@ combine_reduced_output <- function(fileLoc = NULL, presenceAbsence = TRUE){
 
   #load in the files list
   if (is.null(fileLoc)){
-    print(paste0("Select a file in the file folder with the reduced taxa files files you would like to combine (extension '_taxaReduced_YYYY_MM_DD_HHMM.tsv')."))
-    print("********** NOTE: all files being combined should have used the exact same samples **********")
+    if(verbose){
+      print(paste0("Select a file in the file folder with the reduced taxa files files you would like to combine (extension '_taxaReduced_YYYY_MM_DD_HHMM.tsv')."))
+      print("********** NOTE: all files being combined should have used the exact same samples **********")
+    }
     fileLoc <- file.choose()
   }
   if (is.null(fileLoc)){
-
-    print("********************************************************************************")
-    print("The file location is required and needs to be submited as an argument 'fileLoc'")
-    print("when calling the combine_ouput() function or when prompted to select the folder")
-    print("through a popup window (where available).")
-    print("Please rerun the function and provide a character string for the fileLoc")
-    print("argument.")
-    print(paste0("Current file location (fileLoc) is: ", fileLoc))
-    print("********************************************************************************")
-
+    if(verbose){
+      print("********************************************************************************")
+      print("The file location is required and needs to be submited as an argument 'fileLoc'")
+      print("when calling the combine_ouput() function or when prompted to select the folder")
+      print("through a popup window (where available).")
+      print("Please rerun the function and provide a character string for the fileLoc")
+      print("argument.")
+      print(paste0("Current file location (fileLoc) is: ", fileLoc))
+      print("********************************************************************************")
+    }
   }else{
 
     #Printing the start time
-    print(paste0("Start time...", Sys.time()))
+    if(verbose){
+      print(paste0("Start time...", Sys.time()))
+    }
     startTime <- paste0("Start time...", Sys.time())
     dateStamp <- paste0(format(Sys.time(), "%Y_%m_%d_%H%M"))
     #get the directory of interest
@@ -129,12 +139,12 @@ combine_reduced_output <- function(fileLoc = NULL, presenceAbsence = TRUE){
     }
 
     if(nrow(files)<2){
-
-      print("********************************************************************************")
-      print("There are one or fewer files in the target directory for the file type and so ")
-      print("the combination of files is not needed.")
-      print("********************************************************************************")
-
+      if(verbose){
+        print("********************************************************************************")
+        print("There are one or fewer files in the target directory for the file type and so ")
+        print("the combination of files is not needed.")
+        print("********************************************************************************")
+      }
     }else{
 
       # Get a unique number for each file to associate with the combined output results
@@ -150,8 +160,9 @@ combine_reduced_output <- function(fileLoc = NULL, presenceAbsence = TRUE){
       if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 2")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 2"), file = auditFile, append = TRUE))}
 
       for(records in 1:nrow(files)){
-
-        print(paste0("Starting file ", files[records,3], " at time...", Sys.time()))
+        if(verbose){
+          print(paste0("Starting file ", files[records,3], " at time...", Sys.time()))
+        }
         suppressWarnings(write(paste0("Starting file ", files[records,3], " at time...", Sys.time()), file = paste0(dateStamp, "_CombineTaxaReduced.txt"), append = TRUE))
 
         #Audit line
@@ -257,8 +268,9 @@ combine_reduced_output <- function(fileLoc = NULL, presenceAbsence = TRUE){
 
   #Write the results to the file
   suppressWarnings(write.table(totalResults, file = paste0(dateStamp, "_CombineTaxaReduced.tsv"), append = FALSE, na = "NA", row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t"))
-
-  print(paste0(startTime, " End time ", Sys.time()))
+  if(verbose){
+    print(paste0(startTime, " End time ", Sys.time()))
+  }
   suppressWarnings(write(paste0(startTime, " End time ", Sys.time()), file = paste0(dateStamp, "_CombineTaxaReduced.txt"), append = TRUE))
 
 }#End of function

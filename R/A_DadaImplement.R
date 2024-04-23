@@ -9,6 +9,7 @@
 #' @import utils
 #'
 # DBTC Functions
+#' @importFrom parallel mclapply
 #' @importFrom plyr rbind.fill
 #' @importFrom ShortRead readFastq
 #' @importFrom ShortRead writeFastq
@@ -114,6 +115,8 @@
 #' @param trimOverhang Trim merged reads past the start of the complimentary
 #' primer regions for the Dada mergePairs() function (Default FALSE).
 #' @param minFinalSeqLen The minimum final desired length of the read (Default 100).
+#' @param verbose If set to TRUE then there will be output to the R console, if
+#' FALSE then this reporting data is suppressed.
 #'
 #' @returns
 #' The output from this function includes four folders.
@@ -131,23 +134,27 @@
 #' Shiny Application (DBTCShiny). Biodiversity Data Journal.
 #'
 #' @note
-#' When running DBTC functions the paths for the files selected cannot have
-#' whitespace! File folder locations should be as short as possible (close to
-#' the root directory) as some functions do not process long naming conventions.
-#' Also, special characters should be avoided (including question mark, number
-#' sign, exclamation mark). It is recommended that dashes be used for
-#' separations in naming conventions while retaining underscores for use as
-#' information delimiters (this is how DBTC functions use underscore). There
-#' are several key character strings used in the DBTC pipeline, the presence of
-#' these strings in file or folder names will cause errors when running DBTC
-#' functions.
+#' WARNING - NO WHITESPACE!
 #'
-#' The following strings are those used in DBTC and should not be used in file
-#' or folder naming:
+#' When running DBTC functions the paths for the files selected cannot have white
+#' space! File folder locations should be as short as possible (close to the root
+#' as some functions do not process long naming conventions.
+#'
+#' Also, special characters should be avoided (including question mark, number
+#' sign, exclamation mark). It is recommended that dashes be used for separations
+#' in naming conventions while retaining underscores for use as information
+#' delimiters (this is how DBTC functions use underscore).
+#'
+#' There are several key character strings used in the DBTC pipeline, the presence
+#' of these strings in file or folder names will cause errors when running DBTC functions.
+#'
+#' The following strings are those used in DBTC and should not be used in file or folder naming:
 #' - _BLAST
+#' - _combinedDada
 #' - _taxaAssign
-#' - _taxaCombined
+#' - _taxaAssignCombined
 #' - _taxaReduced
+#' - _CombineTaxaReduced
 #'
 #' @seealso
 #' combine_dada_output()
@@ -178,22 +185,27 @@ dada_implement <- function(runFolderLoc = NULL,
                            maxMismatchValue = 0,
                            minOverlapValue = 12,
                            trimOverhang = FALSE,
-                           minFinalSeqLen = 100){
+                           minFinalSeqLen = 100,
+                           verbose = TRUE){
 
   #If there are issues and I need to audit the script make this 1
   auditScript=0
 
   if(unidirectional == FALSE & bidirectional == FALSE){
-    print("One or both of the unidirectional or bidirectional selections need to be TRUE!")
+    if(verbose){
+      print("One or both of the unidirectional or bidirectional selections need to be TRUE!")
+    }
   }else{
 
     if(is.null(runFolderLoc)){
-      # prompting to choose the file of interest with the tab delimited primer info
-      print("Select a fastq file in one of the run folders in the directory of")
-      print("interest. NOTE: all run folders with fastq data in the parent directory")
-      print("will be processed by DBTC. If this is not what you want please ")
-      print("rearrange your folder structure")
-      n <- substr(readline(prompt="Hit enter key to continue..."),1,1)
+      if(verbose){
+        # prompting to choose the file of interest with the tab delimited primer info
+        print("Select a fastq file in one of the run folders in the directory of")
+        print("interest. NOTE: all run folders with fastq data in the parent directory")
+        print("will be processed by DBTC. If this is not what you want please ")
+        print("rearrange your folder structure")
+        n <- substr(readline(prompt="Hit enter key to continue..."),1,1)
+      }
       #Set the target folder.
       runFolderLoc <- file.choose()
     }
@@ -205,11 +217,13 @@ dada_implement <- function(runFolderLoc = NULL,
     if(is.null(primerFile)){
       tryCatch(
         expr = {
-          # prompting to choose the file of interest with the tab delimited primer info
-          print("Choose the file with the primers of interest. If there is no primer")
-          print("file for this analysis then submit the function with primerFile = '' ")
-          print("or cancel the prompt for the location of the file. ")
-          n <- substr(readline(prompt= "Hit enter key to continue..."),1,1)
+          if(verbose){
+            # prompting to choose the file of interest with the tab delimited primer info
+            print("Choose the file with the primers of interest. If there is no primer")
+            print("file for this analysis then submit the function with primerFile = '' ")
+            print("or cancel the prompt for the location of the file. ")
+            n <- substr(readline(prompt= "Hit enter key to continue..."),1,1)
+          }
           primerFile <- file.choose()
         },
         error = function(e){
@@ -277,18 +291,22 @@ dada_implement <- function(runFolderLoc = NULL,
     maxNVal=0
 
     if(is.null(runFolderLoc)){
-      print("A target directory containing folders with runs and in these run folders the fastq files is necessary to run the program")
-      print("These MiSeq runs need to be for a single set of primers. If another set of primers is desired then this script will need to be run multiple times.")
-      print(paste0("Current file folder location: ", runFolderLoc))
+      if(verbose){
+        print("A target directory containing folders with runs and in these run folders the fastq files is necessary to run the program")
+        print("These MiSeq runs need to be for a single set of primers. If another set of primers is desired then this script will need to be run multiple times.")
+        print(paste0("Current file folder location: ", runFolderLoc))
+      }
     } else{
 
       if(isFALSE(primerFileCheck) && (fwdTrimLen < 1 || revTrimLen < 1)){
-        print("Primer sequences or primer end trimming lengths were not submitted or there was no data in the file.")
-        print("The program will run but will only use quality trimming.")
-        print(paste0("If this is incorrect please halt this process correct your settings or files and resubmit! "))
-        print(paste0("primerFile: ", primerFile))
-        print(paste0("fwdTrimLen: ", fwdTrimLen))
-        print(paste0("revTrimLen: ", revTrimLen))
+        if(verbose){
+          print("Primer sequences or primer end trimming lengths were not submitted or there was no data in the file.")
+          print("The program will run but will only use quality trimming.")
+          print(paste0("If this is incorrect please halt this process correct your settings or files and resubmit! "))
+          print(paste0("primerFile: ", primerFile))
+          print(paste0("fwdTrimLen: ", fwdTrimLen))
+          print(paste0("revTrimLen: ", revTrimLen))
+        }
       }
 
       #Audit line
@@ -312,8 +330,10 @@ dada_implement <- function(runFolderLoc = NULL,
         dirName <- sub(".*/","", runFolderLoc[runCounter])
 
         #Printing the start time
-        print("###########################################################################################")
-        print(paste0(runFolderLoc[runCounter], " - Start time...", Sys.time()))
+        if(verbose){
+          print("###########################################################################################")
+          print(paste0(runFolderLoc[runCounter], " - Start time...", Sys.time()))
+        }
         startTime <- paste0("Start time...", Sys.time())
         dateStamp <- paste0(format(Sys.time(), "%Y_%m_%d_%H%M"), "_")
 
@@ -382,7 +402,9 @@ dada_implement <- function(runFolderLoc = NULL,
         ############################ FILTER & TRIM ##########################################
 
         #Message starting the initial quality figures - Print to screen and log file
-        print(paste0("Begin generating initial quality figures at time...", Sys.time()))
+        if(verbose){
+          print(paste0("Begin generating initial quality figures at time...", Sys.time()))
+        }
         suppressWarnings(write(paste0("Begin generating initial quality figures at time...", Sys.time()), file = paste0(outFolder, "/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
 
         #initialize the variable to store the raw data quality values
@@ -453,7 +475,9 @@ dada_implement <- function(runFolderLoc = NULL,
         if(primerFileCheck){
 
           #Message quality trimming - Print to screen and log file
-          print(paste0("Begin pattern based trimming at time...", Sys.time()))
+          if(verbose){
+            print(paste0("Begin pattern based trimming at time...", Sys.time()))
+          }
           suppressWarnings(write(paste0("Begin pattern based trimming at time...", Sys.time()), file = paste0(outFolder, "/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
 
           if(bidirectional==TRUE | (bidirectional==TRUE & unidirectional == TRUE)){
@@ -524,7 +548,9 @@ dada_implement <- function(runFolderLoc = NULL,
         ########################### QUALITY TRIMMING SECTION ############################################
 
         #Message quality trimming - Print to screen and log file
-        print(paste0("Begin filtering and trimming based on quality arguments at time...", Sys.time()))
+        if(verbose){
+          print(paste0("Begin filtering and trimming based on quality arguments at time...", Sys.time()))
+        }
         suppressWarnings(write(paste0("Begin filtering and trimming based on quality arguments at time...", Sys.time()), file = paste0(outFolder, "/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
 
         if(bidirectional==TRUE | (bidirectional==TRUE & unidirectional == TRUE)){
@@ -582,8 +608,10 @@ dada_implement <- function(runFolderLoc = NULL,
           if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 18")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 18"), file = auditFile, append = TRUE))}
 
           if(length(poorQual)>0){
-            print(paste0("There were low quality samples not able to pass the quality filtering at time ", Sys.time(), "..."))
-            print(poorQual)
+            if(verbose){
+              print(paste0("There were low quality samples not able to pass the quality filtering at time ", Sys.time(), "..."))
+              print(poorQual)
+            }
             suppressWarnings(write(paste0("There were low quality samples not able to pass the quality filtering at time ", Sys.time(), "..."), file = paste0(outFolder, "/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
             suppressWarnings(write(poorQual, file = paste0(outFolder, "/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
           }
@@ -598,7 +626,9 @@ dada_implement <- function(runFolderLoc = NULL,
 
           if (printQualityPdf == TRUE){
             #Message starting the initial quality figures - Print to screen and log file
-            print(paste0("Begin generating quality filtered figures at time...", Sys.time()))
+            if(verbose){
+              print(paste0("Begin generating quality filtered figures at time...", Sys.time()))
+            }
             suppressWarnings(write(paste0("Begin generating quality filtered figures at time...", Sys.time()), file = paste0(outFolder, "/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
           }
 
@@ -705,8 +735,10 @@ dada_implement <- function(runFolderLoc = NULL,
           if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 24")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 24"), file = auditFile, append = TRUE))}
 
           if(length(poorQual)>0){
-            print(paste0("There were low quality samples not able to pass the quality filtering at time ", Sys.time(), "..."))
-            print(poorQual)
+            if(verbose){
+              print(paste0("There were low quality samples not able to pass the quality filtering at time ", Sys.time(), "..."))
+              print(poorQual)
+            }
             suppressWarnings(write(paste0("There were low quality samples not able to pass the quality filtering at time ", Sys.time(), "..."), file = paste0(outFolder, "/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
             suppressWarnings(write(poorQual, file = paste0(outFolder, "/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
           }
@@ -718,7 +750,9 @@ dada_implement <- function(runFolderLoc = NULL,
           fwdFiltTbl <- as.data.frame(cbind(fwdFiltOutFiles, totalFiltOutFiles))
 
           #Message starting the initial quality figures - Print to screen and log file
-          print(paste0("Begin generating quality filtered figures at time...", Sys.time()))
+          if(verbose){
+            print(paste0("Begin generating quality filtered figures at time...", Sys.time()))
+          }
           suppressWarnings(write(paste0("Begin generating quality filtered figures at time...", Sys.time()), file = paste0(outFolder, "/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
 
           #Output the quality for the files post filter and trim in a figure
@@ -761,7 +795,9 @@ dada_implement <- function(runFolderLoc = NULL,
         ############################ DETERMINING EXPECTED ERROR RATES FOR THE RUN ##########################################
 
         #Print to screen and log file
-        print(paste0("Begin getting error rates at time...", Sys.time()))
+        if(verbose){
+          print(paste0("Begin getting error rates at time...", Sys.time()))
+        }
         suppressWarnings(write(paste0("Begin getting error rates at time...", Sys.time()), file = paste0(outFolder, "/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
 
         #Audit line
@@ -783,8 +819,10 @@ dada_implement <- function(runFolderLoc = NULL,
         errCheckFiles <- sample(totalFiltOutFiles, numErrFiles)
 
         #Print the error checking files to the screen and log file
-        print(paste0("Here are the error checking files used..."))
-        print(filesTbl[filesTbl$fileNamesNoDir %in% errCheckFiles,]$fileList)
+        if(verbose){
+          print(paste0("Here are the error checking files used..."))
+          print(filesTbl[filesTbl$fileNamesNoDir %in% errCheckFiles,]$fileList)
+        }
         errCheckNote <- c(paste0("Here are the error checking files used..."), filesTbl[filesTbl$fileNamesNoDir %in% errCheckFiles,]$fileList)
         suppressWarnings(write(errCheckNote, file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
 
@@ -801,11 +839,15 @@ dada_implement <- function(runFolderLoc = NULL,
           revFiltError <- revFiltTbl$revFiltOutFiles[revFiltTbl$totalFiltOutFiles %in% errCheckFiles]
 
           #Estimating the error present in the reads and print to screen and log file
-          print(paste0("At the beginning of the forward read error rate calculation at ", Sys.time()))
+          if(verbose){
+            print(paste0("At the beginning of the forward read error rate calculation at ", Sys.time()))
+          }
           write.table(paste0("At the beginning of the forward read error rate calculation at ", Sys.time()), file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE, na = "", row.names = FALSE, col.names = FALSE, quote = FALSE, sep = "\n")
           errF <- learnErrors(fwdFiltError, nbases = nbases, multithread = TRUE)
 
-          print(paste0("At the beginning of the reverse read error rate calculation at ", Sys.time()))
+          if(verbose){
+            print(paste0("At the beginning of the reverse read error rate calculation at ", Sys.time()))
+          }
           write.table(paste0("At the beginning of the reverse read error rate calculation at ", Sys.time()), file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE, na = "", row.names = FALSE, col.names = FALSE, quote = FALSE, sep = "\n")
           errR <- learnErrors(revFiltError, nbases = nbases, multithread = TRUE)
 
@@ -816,7 +858,9 @@ dada_implement <- function(runFolderLoc = NULL,
           suppressWarnings(ggsave(paste0(outFolder, "/", dateStamp, dirName, "_ErrorReverse.pdf")))
 
           #Print to screen and log file
-          print(paste0("At the end of the error rate calculations at ", Sys.time()))
+          if(verbose){
+            print(paste0("At the end of the error rate calculations at ", Sys.time()))
+          }
           suppressWarnings(write(paste0("At the end of the error rate calculations at ", Sys.time()), file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
 
           ########## DADA FUNCTIONS SECTION (QUALITY FILTER, DEREP, ERROR RATE FILTER, MERGE) ##################
@@ -826,7 +870,9 @@ dada_implement <- function(runFolderLoc = NULL,
 
           #Start chimera section
           logStr <- paste0("Start dereplicating at ", Sys.time())
-          print(logStr)
+          if(verbose){
+            print(logStr)
+          }
           suppressWarnings(write(logStr, file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
 
           #De-replicating the filtered and trimmed sequences
@@ -840,18 +886,24 @@ dada_implement <- function(runFolderLoc = NULL,
 
           #Infer sample composition using the estimated error rates from the previous step
           logStr <- paste0("Start forward dada at ", Sys.time())
-          print(logStr)
+          if(verbose){
+            print(logStr)
+          }
           suppressWarnings(write(logStr, file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
           dadaF1 <- dada(fwdDerep, err = errF, multithread = TRUE)
 
           logStr <- paste0("Start reverse dada at ", Sys.time())
-          print(logStr)
+          if(verbose){
+            print(logStr)
+          }
           suppressWarnings(write(logStr, file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
           dadaR1 <- dada(revDerep, err = errR, multithread = TRUE)
 
           #Merge forward and reverse reads
           logStr <- paste0("Start merged at ", Sys.time())
-          print(logStr)
+          if(verbose){
+            print(logStr)
+          }
           suppressWarnings(write(logStr, file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
           merged <- mergePairs(dadaF1, fwdDerep, dadaR1, revDerep, trimOverhang = TRUE, returnRejects = FALSE, maxMismatch = maxMismatchValue, verbose = TRUE, minOverlap = minOverlapValue)
 
@@ -864,7 +916,9 @@ dada_implement <- function(runFolderLoc = NULL,
           if(nrow(finalTable)==0){
 
             logStr <- paste0("No sequences were successfully merged - ", Sys.time())
-            print(logStr)
+            if(verbose){
+              print(logStr)
+            }
             suppressWarnings(write(logStr, file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
             finalTable <-cbind(finalTable, rep(0,length(finalTable)))
             finalTable<-as.data.frame(cbind(Results="Merged", finalTable), drop=FALSE, check.names = FALSE)
@@ -881,7 +935,9 @@ dada_implement <- function(runFolderLoc = NULL,
 
           #Start chimera section
           logStr <- paste0("Start chimera checking at ", Sys.time())
-          print(logStr)
+          if(verbose){
+            print(logStr)
+          }
           suppressWarnings(write(logStr, file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
 
           #Remove chimeric sequences
@@ -946,7 +1002,9 @@ dada_implement <- function(runFolderLoc = NULL,
 
             #Start trimming section
             logStr <- paste0("Completing the unmerged analyses at... ", Sys.time())
-            print(logStr)
+            if(verbose){
+              print(logStr)
+            }
             suppressWarnings(write(logStr, file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
 
             #Get the Forward table
@@ -1126,7 +1184,9 @@ dada_implement <- function(runFolderLoc = NULL,
           fwdFiltError <- fwdFiltTbl$fwdFiltOutFiles[fwdFiltTbl$totalFiltOutFiles %in% errCheckFiles]
 
           #Estimating the error present in the reads and print to screen and log file
-          print(paste0("At the beginning of the forward read error rate calculation at ", Sys.time()))
+          if(verbose){
+            print(paste0("At the beginning of the forward read error rate calculation at ", Sys.time()))
+          }
           write.table(paste0("At the beginning of the forward read error rate calculation at ", Sys.time()), file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE, na = "", row.names = FALSE, col.names = FALSE, quote = FALSE, sep = "\n")
           errF <- learnErrors(fwdFiltError, nbases = nbases, multithread = TRUE)
 
@@ -1134,7 +1194,9 @@ dada_implement <- function(runFolderLoc = NULL,
           suppressWarnings(ggsave(paste0(outFolder, "/", dateStamp, dirName, "_ErrorForward.pdf")))
 
           #Print to screen and log file
-          print(paste0("At the end of the error rate calculations at ", Sys.time()))
+          if(verbose){
+            print(paste0("At the end of the error rate calculations at ", Sys.time()))
+          }
           suppressWarnings(write(paste0("At the end of the error rate calculations at ", Sys.time()), file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
 
           ########## DADA FUNCTIONS SECTION (QUALITY FILTER, DEREP, ERROR RATE FILTER, MERGE) ##################
@@ -1144,7 +1206,9 @@ dada_implement <- function(runFolderLoc = NULL,
 
           #Start chimera section
           logStr <- paste0("Start dereplicating at ", Sys.time())
-          print(logStr)
+          if(verbose){
+            print(logStr)
+          }
           suppressWarnings(write(logStr, file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
 
           #De-replicating the filtered and trimmed sequences
@@ -1157,7 +1221,9 @@ dada_implement <- function(runFolderLoc = NULL,
 
           #Infer sample composition using the estimated error rates from the previous step
           logStr <- paste0("Start forward dada at ", Sys.time())
-          print(logStr)
+          if(verbose){
+            print(logStr)
+          }
           suppressWarnings(write(logStr, file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
           dadaF1 <- dada(fwdDerep, err = errF, multithread = TRUE)
 
@@ -1238,7 +1304,9 @@ dada_implement <- function(runFolderLoc = NULL,
         ########################################## RUN REPORTING #############################
         #Start reporting section
         logStr <- paste0("Running the reporting for the analyses... ", Sys.time())
-        print(logStr)
+        if(verbose){
+          print(logStr)
+        }
         suppressWarnings(write(logStr, file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
 
         ## Make functions to calculate the other reporting values - Stats functions
@@ -1473,7 +1541,6 @@ dada_implement <- function(runFolderLoc = NULL,
 
             #If there is only one record then the name of the sample is dropped in the colMeans so we need to add it back
             if(length(fwdFile$fileNamesNoDir)==1){
-              print("Here 30E")
               row.names(noChimTrimReadsOverMinLen)<-fwdFile$fileNamesNoDir
               row.names(noChimTrimUniqueReadsOverMinLen)<-fwdFile$fileNamesNoDir
               row.names(noChimTrimAvgLenOverMinLen)<-fwdFile$fileNamesNoDir
@@ -1523,7 +1590,9 @@ dada_implement <- function(runFolderLoc = NULL,
 
         #Print to log file
         suppressWarnings(write.table(t(track), file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummaryTable.tsv"), append = FALSE, na = "NA", row.names = TRUE, col.names = NA, quote = FALSE, sep = "\t"))
-        print(paste0(startTime, " - End time...", Sys.time()))
+        if(verbose){
+          print(paste0(startTime, " - End time...", Sys.time()))
+        }
         suppressWarnings(write(paste0("At the end...", Sys.time()), file = paste0(outFolder,"/", dateStamp, dirName, "_dadaSummary.txt"), append = TRUE))
 
 

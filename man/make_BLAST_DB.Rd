@@ -9,7 +9,8 @@ make_BLAST_DB(
   makeblastdbPath = "makeblastdb",
   taxaDBLoc = NULL,
   dbName = NULL,
-  minLen = 100
+  minLen = 100,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -24,6 +25,9 @@ see the main DBTC page for details).}
 \item{dbName}{A short 6-8 alpha character name used when building a database (Default NULL).}
 
 \item{minLen}{The minimum sequence length used to construct the BLAST database (Default 100).}
+
+\item{verbose}{If set to TRUE then there will be output to the R console, if
+FALSE then this reporting data is suppressed.}
 }
 \value{
 The output from this function includes a folder with the BLAST database named
@@ -40,23 +44,27 @@ NCBI blast+ program, makeblastdb and the NCBI taxonomic database (accessionTaxa.
 run this script (see readme instructions for details).
 }
 \note{
-When running DBTC functions the paths for the files selected cannot have
-whitespace! File folder locations should be as short as possible (close to
-the root directory) as some functions do not process long naming conventions.
-Also, special characters should be avoided (including question mark, number
-sign, exclamation mark). It is recommended that dashes be used for
-separations in naming conventions while retaining underscores for use as
-information delimiters (this is how DBTC functions use underscore). There
-are several key character strings used in the DBTC pipeline, the presence of
-these strings in file or folder names will cause errors when running DBTC
-functions.
+WARNING - NO WHITESPACE!
 
-The following strings are those used in DBTC and should not be used in file
-or folder naming:
+When running DBTC functions the paths for the files selected cannot have white
+space! File folder locations should be as short as possible (close to the root
+as some functions do not process long naming conventions.
+
+Also, special characters should be avoided (including question mark, number
+sign, exclamation mark). It is recommended that dashes be used for separations
+in naming conventions while retaining underscores for use as information
+delimiters (this is how DBTC functions use underscore).
+
+There are several key character strings used in the DBTC pipeline, the presence
+of these strings in file or folder names will cause errors when running DBTC functions.
+
+The following strings are those used in DBTC and should not be used in file or folder naming:
 - _BLAST
+- _combinedDada
 - _taxaAssign
-- _taxaCombined
+- _taxaAssignCombined
 - _taxaReduced
+- _CombineTaxaReduced
 }
 \examples{
 \dontrun{

@@ -130,6 +130,7 @@ Each of below CRAN packages and their dependencies are required for the DBTC pac
 
 ```
 install.packages(c('ggplot2',
+                   'parallel',
                    'pbapply',
                    'plyr',
                    'stats',
@@ -137,6 +138,7 @@ install.packages(c('ggplot2',
                    'utils'))
                    
 library(c('ggplot2',
+          'parallel',
           'pbapply',
           'plyr',
           'stats',
@@ -264,6 +266,7 @@ Two files are required as input for the dada_implement() function. The first are
 - <strong>minOverlapValue -</strong> Minimum number of overlapping nucleotides for the forward and reverse reads for the Dada mergePairs() function (Default 12).
 - <strong>trimOverhang -</strong> Trim merged reads past the start of the complimentary primer regions for the Dada mergePairs() function (Default FALSE).
 - <strong>minFinalSeqLen -</strong> The minimum final desired length of the read (Default 100).
+- <strong>verbose -</strong> If set to TRUE then there will be output to the R console, if FALSE then this reporting data is suppressed.
 
 ### Output
 
@@ -336,6 +339,7 @@ Two or more files to be combined are required as input for this function. These 
 ### Arguments
 - <strong>fileLoc -</strong> Select a file in the file folder with [dada_inplement()](#dada-implement) results you would like to combine (YYYY_MM_DD_HHMM_FileName_MergeFwdRev OR YYYY_MM_DD_HHMM_FileName_Merge both .tsv and .fas files (Default NULL).
 - <strong>minLen -</strong> The minimum final desired length of the read (Default 100).
+- <strong>verbose -</strong> If set to TRUE then there will be output to the R console, if FALSE then this reporting data is suppressed.
 
 ### Output
 The output from this function includes three files.
@@ -366,6 +370,7 @@ This function takes a [Fasta](https://en.wikipedia.org/wiki/FASTA_format) file (
 - <strong>taxaDBLoc  -</strong> The location of the NCBI [accessionTaxa.sql](#create-a-local-ncbi-taxonomy-database-to-assign-taxonomic-identifications-to-blast-results) taxonomic data base (Default NULL).
 - <strong>dbName -</strong> A short 6-8 alpha character name used when building a database (Default NULL).
 - <strong>minLen -</strong> The minimum sequence length used to construct the BLAST database (Default 100).
+- <strong>verbose -</strong> If set to TRUE then there will be output to the R console, if FALSE then this reporting data is suppressed.
 
 ### Output
 The output from this function includes a folder with the BLAST database named according to the submitted dbName.
@@ -393,6 +398,7 @@ Provide a location for the BLAST database you would like to use by selecting a f
 - <strong>minLen -</strong> The minimum length of the sequences that will be BLASTed (Default 100).
 - <strong>BLASTResults -</strong> The number of returned results, or the depth of the reported results, saved from the BLAST (Default 200).
 - <strong>numCores -</strong> The number of cores used to run the function (Default 1, Windows systems can only use a single core).
+- <strong>verbose -</strong> If set to TRUE then there will be output to the R console, if FALSE then this reporting data is suppressed.
 
 ### Output
 Two files are produced from this function, a BLAST run file and a BLAST results file for each of the [Fasta](https://en.wikipedia.org/wiki/FASTA_format) files in the target directory.
@@ -423,6 +429,7 @@ This function requires a BLAST output file and an associated [Fasta](https://en.
 - <strong>coverReportThresh -</strong> The percent coverage threshold used for reporting flags below this threshold (Default 95).
 - <strong>identReportThresh -</strong> The percent identity threshold used for reporting flags below this threshold (Default 95).
 - <strong>includeAllDada  -</strong> When paired Dada [ASV](https://en.wikipedia.org/wiki/Amplicon_sequence_variant) tables are present, when set to FALSE, this will exclude records without taxonomic assignment (Default TRUE).
+- <strong>verbose -</strong> If set to TRUE then there will be output to the R console, if FALSE then this reporting data is suppressed.
 
 ### Output
 A single taxonomic assignment file is created for each BLAST output file with the naming convention having the string '_taxaAssign_YYYY_MM_DD_HHMM.tsv'. In addition, there is a run file that is also generated which contains the run details with the naming convention 'YYYY_MM_DD_HHMM_taxaAssign.txt'.
@@ -465,6 +472,7 @@ Select a file in a folder with the taxa assigned files you would like to combine
 ### Arguments
 - <strong>fileLoc -</strong> The location of a file in a directory where all of the '_taxaAssign_YYYY_MM_DD_HHMM.tsv' files are located.
 - <strong>numCores -</strong> The number of cores used to run the function (Default 1, Windows systems can only use a single core).
+- <strong>verbose -</strong> If set to TRUE then there will be output to the R console, if FALSE then this reporting data is suppressed.
 
 ### Output
 This function produces a 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' and a 'YYYY_MM_DD_HHMM_taxaAssignCombined.txt' file in the selected target directory.
@@ -488,6 +496,7 @@ This function requires a file in a directory where all '_taxaAssign_YYYY_MM_DD_H
 ### Arguments
 - <strong>fileLoc -</strong>  The location of a file in a directory where all of the '_taxaAssign_YYYY_MM_DD_HHMM.tsv' and/or 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' files are located.
 - <strong>numCores -</strong> The number of cores used to run the function (Default 1, Windows systems can only use a single core).
+- <strong>verbose -</strong> If set to TRUE then there will be output to the R console, if FALSE then this reporting data is suppressed.
 
 ### Output
 This function produces a '_taxaReduced_YYYY_MM_DD_HHMM.tsv' file for every '_taxaAssign_YYYY_MM_DD_HHMM.tsv' or 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' present in the target directory.
@@ -513,6 +522,7 @@ Select a file in a folder with '_taxaReduced_YYYY_MM_DD_HHMM.tsv' files represen
 ### Arguments
 - <strong>fileLoc -</strong>  The location of a file in a directory where all of the '_taxaReduced_YYYY_MM_DD_HHMM.tsv' files are located.
 - <strong>presenceAbsence -</strong>  A TRUE or FALSE value used to indicate if the read values should be replaced with presence/absence (1/0) data. This change is necessary when combining taxa for the same named samples across molecular markers (TRUE) but is not necessary when combining results for taxa with all unique sample names (FALSE). 
+- <strong>verbose -</strong> If set to TRUE then there will be output to the R console, if FALSE then this reporting data is suppressed.
 
 ### Output
 Two files, a 'YYYY_MM_DD_HHMM_CombineTaxaReduced.tsv' result file and a 'YYYY_MM_DD_HHMM_CombineTaxaReduced.txt' run summary file are generated from this function. The result file contains presence/absence data in a matrix that associates the data with samples, taxa, and molecular marker. The column headers in the results file includes the following, superkingdom, phylum, class, order, family, genus, species, markers(n number of columns), samples (n number).

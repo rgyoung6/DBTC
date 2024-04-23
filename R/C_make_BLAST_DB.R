@@ -31,6 +31,8 @@
 #' see the main DBTC page for details).
 #' @param dbName A short 6-8 alpha character name used when building a database (Default NULL).
 #' @param minLen The minimum sequence length used to construct the BLAST database (Default 100).
+#' @param verbose If set to TRUE then there will be output to the R console, if
+#' FALSE then this reporting data is suppressed.
 #'
 #' @returns
 #' The output from this function includes a folder with the BLAST database named
@@ -42,23 +44,27 @@
 #' Shiny Application (DBTCShiny). Biodiversity Data Journal.
 #'
 #' @note
-#' When running DBTC functions the paths for the files selected cannot have
-#' whitespace! File folder locations should be as short as possible (close to
-#' the root directory) as some functions do not process long naming conventions.
-#' Also, special characters should be avoided (including question mark, number
-#' sign, exclamation mark). It is recommended that dashes be used for
-#' separations in naming conventions while retaining underscores for use as
-#' information delimiters (this is how DBTC functions use underscore). There
-#' are several key character strings used in the DBTC pipeline, the presence of
-#' these strings in file or folder names will cause errors when running DBTC
-#' functions.
+#' WARNING - NO WHITESPACE!
 #'
-#' The following strings are those used in DBTC and should not be used in file
-#' or folder naming:
+#' When running DBTC functions the paths for the files selected cannot have white
+#' space! File folder locations should be as short as possible (close to the root
+#' as some functions do not process long naming conventions.
+#'
+#' Also, special characters should be avoided (including question mark, number
+#' sign, exclamation mark). It is recommended that dashes be used for separations
+#' in naming conventions while retaining underscores for use as information
+#' delimiters (this is how DBTC functions use underscore).
+#'
+#' There are several key character strings used in the DBTC pipeline, the presence
+#' of these strings in file or folder names will cause errors when running DBTC functions.
+#'
+#' The following strings are those used in DBTC and should not be used in file or folder naming:
 #' - _BLAST
+#' - _combinedDada
 #' - _taxaAssign
-#' - _taxaCombined
+#' - _taxaAssignCombined
 #' - _taxaReduced
+#' - _CombineTaxaReduced
 #'
 #' @seealso
 #' dada_implement()
@@ -70,7 +76,7 @@
 #' combine_reduced_output()
 
 ##################################### make_BLAST_DB FUNCTION ##############################################################
-make_BLAST_DB <- function(fileLoc = NULL, makeblastdbPath = "makeblastdb", taxaDBLoc = NULL, dbName = NULL, minLen = 100){
+make_BLAST_DB <- function(fileLoc = NULL, makeblastdbPath = "makeblastdb", taxaDBLoc = NULL, dbName = NULL, minLen = 100, verbose = TRUE){
 
   #If there are issues and I need to audit the script make this 1
   auditScript=0
@@ -80,48 +86,60 @@ make_BLAST_DB <- function(fileLoc = NULL, makeblastdbPath = "makeblastdb", taxaD
   on.exit(setwd(start_wd))
 
   #Printing the start time
-  print(paste0("Start time...", Sys.time()))
+  if(verbose){
+    print(paste0("Start time...", Sys.time()))
+  }
   startTime <- paste0("Start time...", Sys.time())
   dateStamp <- paste0(format(Sys.time(), "%Y_%m_%d_%H%M"))
 
   if(is.null(dbName)){
-    print("********************************************************************************")
-    print("Please rerun the function and provide a name for the outgoing database. This ")
-    print("should be descriptive but short (less than 20 characters) with no special ")
-    print("characters.")
-    print(paste0("Current database name (dbName) is: ", dbName))
-    print("********************************************************************************")
+    if(verbose){
+      print("********************************************************************************")
+      print("Please rerun the function and provide a name for the outgoing database. This ")
+      print("should be descriptive but short (less than 20 characters) with no special ")
+      print("characters.")
+      print(paste0("Current database name (dbName) is: ", dbName))
+      print("********************************************************************************")
+    }
   } else {
 
     #load in the location of the accessionTaxa.sql
     if (is.null(taxaDBLoc)){
-      print(paste0("Select the NCBI taxonomic data file (accessionTaxa.sql)."))
+      if(verbose){
+        print(paste0("Select the NCBI taxonomic data file (accessionTaxa.sql)."))
+      }
       taxaDBLoc <- file.choose()
     }
 
     #load in the fasta file of interest
     if (is.null(fileLoc)){
-      print(paste0("Select the fasta file for use in constructing the custom database."))
+      if(verbose){
+        print(paste0("Select the fasta file for use in constructing the custom database."))
+      }
       fileLoc <- file.choose()
     }
 
     #load in the location of the makeBLASTdb file
     if (is.null(makeblastdbPath)){
-      print(paste0("Select the location of the makeBLASTdb program."))
+      if(verbose){
+        print(paste0("Select the location of the makeBLASTdb program."))
+      }
       makeblastdbPath <- file.choose()
     }
 
     #Audit line
     if(auditScript>0){
       auditFile <- paste0(dirname(fileLoc),"/", format(Sys.time(), "%Y_%m_%d_%H%M"), "_audit.txt")
-      print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 1"))
+      if(verbose){
+        print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 1"))
+      }
       suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 1"), file = auditFile, append = FALSE))
     }
 
     if(grepl(" ",fileLoc) && grepl(" ",makeblastdbPath) && grepl(" ",taxaDBLoc)){
-
-      print("Error: One or more of the file paths contains a space in the naming convention. Please change the naming and try again.")
-
+      if(verbose){
+        print("Error: One or more of the file paths contains a space in the naming convention. Please change the naming and try again.")
+      }
     } else {
 
       #Audit line
@@ -144,19 +162,19 @@ make_BLAST_DB <- function(fileLoc = NULL, makeblastdbPath = "makeblastdb", taxaD
       rm(seqTableTemp)
 
       if(!grepl(">", seqTable[3,1], fixed = TRUE)){
-
-        print("********************************************************************************")
-        print("The submitted fasta file is not in the single line nucleotide format which is ")
-        print("needed for this script. Please correct the format and rerun this script.")
-        print("********************************************************************************")
-
+        if(verbose){
+          print("********************************************************************************")
+          print("The submitted fasta file is not in the single line nucleotide format which is ")
+          print("needed for this script. Please correct the format and rerun this script.")
+          print("********************************************************************************")
+        }
       }else if (mean(sapply(seqTable[,1], function(x) sum(gregexpr("\\|", x)[[1]] >= 0))) != 5){
-
-        print("********************************************************************************")
-        print("The submitted fasta file is not in the MACER file format which is ")
-        print("needed for this script. Please correct the format and rerun this script.")
-        print("********************************************************************************")
-
+        if(verbose){
+          print("********************************************************************************")
+          print("The submitted fasta file is not in the MACER file format which is ")
+          print("needed for this script. Please correct the format and rerun this script.")
+          print("********************************************************************************")
+        }
       }else{
 
         #Audit line
@@ -208,11 +226,11 @@ make_BLAST_DB <- function(fileLoc = NULL, makeblastdbPath = "makeblastdb", taxaD
 
         #Build the BLAST command
         BLASTMakeDBCmdString<- paste0(makeblastdbPath, " -in ", fileLoc, "  -parse_seqids -title '", dbName, "' -dbtype nucl -out ", dbName)
-
-        print("********************************************************************************")
-        print(paste0("Begin makeblastdb at time: ", Sys.time()))
-        print("********************************************************************************")
-
+        if(verbose){
+          print("********************************************************************************")
+          print(paste0("Begin makeblastdb at time: ", Sys.time()))
+          print("********************************************************************************")
+        }
         #Audit line
         if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 8")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 8"), file = auditFile, append = TRUE))}
 
@@ -248,7 +266,8 @@ make_BLAST_DB <- function(fileLoc = NULL, makeblastdbPath = "makeblastdb", taxaD
     }#Closing off the check to see if the file names had spaces
   }#Closing the if checking to see if user supplied arguments were included
 
-  print(paste0(startTime, " - End time...", Sys.time()))
-
+  if(verbose){
+    print(paste0(startTime, " - End time...", Sys.time()))
+  }
 }#Close function
 

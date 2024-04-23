@@ -4,7 +4,7 @@
 \alias{reduce_taxa}
 \title{Reduce Taxa Assignment}
 \usage{
-reduce_taxa(fileLoc = NULL, numCores = 1)
+reduce_taxa(fileLoc = NULL, numCores = 1, verbose = TRUE)
 }
 \arguments{
 \item{fileLoc}{The location of a file in a directory where all of the 'taxaAssign'
@@ -12,6 +12,9 @@ and/or 'taxaAssignCombine' files are located (Default NULL).}
 
 \item{numCores}{The number of cores used to run the function (Default 1,
 Windows systems can only use a single core)}
+
+\item{verbose}{If set to TRUE then there will be output to the R console, if
+FALSE then this reporting data is suppressed.}
 }
 \value{
 This function produces a 'taxa_reduced' file for every 'taxaAssign' or
@@ -32,23 +35,27 @@ are combine by the mean number of records, the mean of the minimum coverage
 and identity values, and the mean of the maximum eValues.
 }
 \note{
-When running DBTC functions the paths for the files selected cannot have
-whitespace! File folder locations should be as short as possible (close to
-the root directory) as some functions do not process long naming conventions.
-Also, special characters should be avoided (including question mark, number
-sign, exclamation mark). It is recommended that dashes be used for
-separations in naming conventions while retaining underscores for use as
-information delimiters (this is how DBTC functions use underscore). There
-are several key character strings used in the DBTC pipeline, the presence of
-these strings in file or folder names will cause errors when running DBTC
-functions.
+WARNING - NO WHITESPACE!
 
-The following strings are those used in DBTC and should not be used in file
-or folder naming:
+When running DBTC functions the paths for the files selected cannot have white
+space! File folder locations should be as short as possible (close to the root
+as some functions do not process long naming conventions.
+
+Also, special characters should be avoided (including question mark, number
+sign, exclamation mark). It is recommended that dashes be used for separations
+in naming conventions while retaining underscores for use as information
+delimiters (this is how DBTC functions use underscore).
+
+There are several key character strings used in the DBTC pipeline, the presence
+of these strings in file or folder names will cause errors when running DBTC functions.
+
+The following strings are those used in DBTC and should not be used in file or folder naming:
 - _BLAST
+- _combinedDada
 - _taxaAssign
-- _taxaCombined
+- _taxaAssignCombined
 - _taxaReduced
+- _CombineTaxaReduced
 }
 \examples{
 \dontrun{

@@ -51,6 +51,8 @@
 #' flags below this threshold (Default 95).
 #' @param includeAllDada When paired Dada ASV tables are present, when set to
 #' FALSE, this will exclude records without taxonomic assignment (Default TRUE).
+#' @param verbose If set to TRUE then there will be output to the R console, if
+#' FALSE then this reporting data is suppressed.
 #'
 #' @returns
 #' This function produces a taxa_reduced file for each submitted BLAST-fasta submission.
@@ -61,23 +63,27 @@
 #' Shiny Application (DBTCShiny). Biodiversity Data Journal.
 #'
 #' @note
-#' When running DBTC functions the paths for the files selected cannot have
-#' whitespace! File folder locations should be as short as possible (close to
-#' the root directory) as some functions do not process long naming conventions.
-#' Also, special characters should be avoided (including question mark, number
-#' sign, exclamation mark). It is recommended that dashes be used for
-#' separations in naming conventions while retaining underscores for use as
-#' information delimiters (this is how DBTC functions use underscore). There
-#' are several key character strings used in the DBTC pipeline, the presence of
-#' these strings in file or folder names will cause errors when running DBTC
-#' functions.
+#' WARNING - NO WHITESPACE!
 #'
-#' The following strings are those used in DBTC and should not be used in file
-#' or folder naming:
+#' When running DBTC functions the paths for the files selected cannot have white
+#' space! File folder locations should be as short as possible (close to the root
+#' as some functions do not process long naming conventions.
+#'
+#' Also, special characters should be avoided (including question mark, number
+#' sign, exclamation mark). It is recommended that dashes be used for separations
+#' in naming conventions while retaining underscores for use as information
+#' delimiters (this is how DBTC functions use underscore).
+#'
+#' There are several key character strings used in the DBTC pipeline, the presence
+#' of these strings in file or folder names will cause errors when running DBTC functions.
+#'
+#' The following strings are those used in DBTC and should not be used in file or folder naming:
 #' - _BLAST
+#' - _combinedDada
 #' - _taxaAssign
-#' - _taxaCombined
+#' - _taxaAssignCombined
 #' - _taxaReduced
+#' - _CombineTaxaReduced
 #'
 #' @seealso
 #' dada_implement()
@@ -89,7 +95,7 @@
 #' combine_reduced_output()
 
 ##################################### taxon_assign FUNCTION ##############################################################
-taxon_assign<- function(fileLoc = NULL, taxaDBLoc = NULL, numCores = 1, coverage = 95, ident = 95, propThres = 0.95, coverReportThresh=0, identReportThresh=0, includeAllDada=TRUE){
+taxon_assign<- function(fileLoc = NULL, taxaDBLoc = NULL, numCores = 1, coverage = 95, ident = 95, propThres = 0.95, coverReportThresh=0, identReportThresh=0, includeAllDada=TRUE, verbose = TRUE){
 
   #If there are issues and I need to audit the script make this 1
   auditScript=0
@@ -99,13 +105,17 @@ taxon_assign<- function(fileLoc = NULL, taxaDBLoc = NULL, numCores = 1, coverage
   on.exit(setwd(start_wd))
 
   if (is.null(fileLoc)){
-    print(paste0("Select a file in the file folder with the BLAST output file(s), associated fas file, and associated Dada ASV output files (if present)."))
+    if(verbose){
+      print(paste0("Select a file in the file folder with the BLAST output file(s), associated fas file, and associated Dada ASV output files (if present)."))
+    }
     fileLoc <- file.choose()
   }
 
   #Set the location of the BLAST taxonomic database
   if(is.null(taxaDBLoc)){
-    print(paste0("Select the data base file with the NCBI taxonomic database (i.e. accessionTaxa.sql)"))
+    if(verbose){
+      print(paste0("Select the data base file with the NCBI taxonomic database (i.e. accessionTaxa.sql)"))
+    }
     taxaDBLoc <- file.choose()
   }
 
@@ -113,7 +123,9 @@ taxon_assign<- function(fileLoc = NULL, taxaDBLoc = NULL, numCores = 1, coverage
   if(auditScript>0){
     auditFile <- paste0(dirname(fileLoc),"/", format(Sys.time(), "%Y_%m_%d_%H%M"), "_audit.txt")
     write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 1"), file = auditFile, append = FALSE)
-    print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 1"))
+    if(verbose){
+      print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 1"))
+    }
   }
 
   #Get the directory of interest
@@ -122,7 +134,9 @@ taxon_assign<- function(fileLoc = NULL, taxaDBLoc = NULL, numCores = 1, coverage
   setwd(dirname(taxaDBLoc))
 
   #Printing the start time
-  print(paste0("Start time...", Sys.time()))
+  if(verbose){
+    print(paste0("Start time...", Sys.time()))
+  }
   startTime <- paste0("Start time...", Sys.time())
   dateStamp <- paste0(format(Sys.time(), "%Y_%m_%d_%H%M"))
 
@@ -228,9 +242,11 @@ taxon_assign<- function(fileLoc = NULL, taxaDBLoc = NULL, numCores = 1, coverage
           #Get the start time to use in the reporting of the progress throughout
           startTime <- Sys.time()
 
-          print("********************************************************************************")
-          print(paste0("Starting analysis ", filesList[fileCounter,3], ": ", fileCounter, " of ", nrow(filesList)," at ", Sys.time()))
-          print("********************************************************************************")
+          if(verbose){
+            print("********************************************************************************")
+            print(paste0("Starting analysis ", filesList[fileCounter,3], ": ", fileCounter, " of ", nrow(filesList)," at ", Sys.time()))
+            print("********************************************************************************")
+          }
 
           #Create the output dataframe
           condensedOut <- data.frame(uniqueID = character(), superkingdom = character(), phylum = character(), class = character(), order = character(), family = character(), genus = character(), species = character(), Top_BLAST = character(), Lowest_Single_Rank = character(), Lowest_Single_Taxa = character(), Lowest_Single_Rank_Above_Thres = character(), Lowest_Single_Taxa_Above_Thres = character(), Final_Common_Names = character(), Final_Rank = character(), Final_Taxa = character(), Final_Rank_Taxa_Thres = character(), Result_Code = character())
@@ -590,11 +606,19 @@ taxon_assign<- function(fileLoc = NULL, taxaDBLoc = NULL, numCores = 1, coverage
           if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 9")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 9"), file = auditFile, append = TRUE))}
           if(numCores==1){
             if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 10")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 10"), file = auditFile, append = TRUE))}
-            finalCondensedOut <- pbapply::pblapply(seq_len(length(blastResultsuniqueID)), taxaResults)
+            if(verbose){
+              finalCondensedOut <- pbapply::pblapply(seq_len(length(blastResultsuniqueID)), taxaResults)
+            }else{
+              finalCondensedOut <- lapply(seq_len(length(blastResultsuniqueID)), taxaResults)
+            }
             if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 10A")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 10A"), file = auditFile, append = TRUE))}
           }else{
             if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 11")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 11"), file = auditFile, append = TRUE))}
-            finalCondensedOut <- pbapply::pblapply(seq_len(length(blastResultsuniqueID)), taxaResults, cl = numCores)
+            if(verbose){
+              finalCondensedOut <- pbapply::pblapply(seq_len(length(blastResultsuniqueID)), taxaResults, cl = numCores)
+            }else{
+              finalCondensedOut <- parallel::mclapply(seq_len(length(blastResultsuniqueID)), taxaResults, mc.cores = numCores)
+            }
           }
 
           #Take the list from the pblapply and place it in to a data frame
@@ -620,7 +644,7 @@ taxon_assign<- function(fileLoc = NULL, taxaDBLoc = NULL, numCores = 1, coverage
             if(includeAllDada==TRUE){
               totalDataset <- merge(taxaTotalFile, dadaOutputTable, "uniqueID", all = TRUE)
             }else{
-                totalDataset <- merge(taxaTotalFile, dadaOutputTable, "uniqueID", all.x = TRUE)
+              totalDataset <- merge(taxaTotalFile, dadaOutputTable, "uniqueID", all.x = TRUE)
             }
             #Change the .(which were forced to change from the original naming convention of -) to - for output
             colnames(totalDataset)<-gsub("\\.","-",colnames(totalDataset))
@@ -638,13 +662,13 @@ taxon_assign<- function(fileLoc = NULL, taxaDBLoc = NULL, numCores = 1, coverage
             if(!grepl(">", seqTable[3,1], fixed = TRUE)){
 
               if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 16")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 16"), file = auditFile, append = TRUE))}
-
-              print("*****ERROR**********************************************************************")
-              print("The submitted fasta file is not in the single line nucleotide format which is ")
-              print("needed for this script. Please correct the format and rerun this script.")
-              print(" Sequence data was not added to this taxaAssign file. Please correct and try again!")
-              print("********************************************************************************")
-
+              if(verbose){
+                print("*****ERROR**********************************************************************")
+                print("The submitted fasta file is not in the single line nucleotide format which is ")
+                print("needed for this script. Please correct the format and rerun this script.")
+                print(" Sequence data was not added to this taxaAssign file. Please correct and try again!")
+                print("********************************************************************************")
+              }
             }else{
 
               if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 17")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 17"), file = auditFile, append = TRUE))}
@@ -679,7 +703,10 @@ taxon_assign<- function(fileLoc = NULL, taxaDBLoc = NULL, numCores = 1, coverage
           }
 
           if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 19")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 19"), file = auditFile, append = TRUE))}
-          print(paste0("End of this loop ", fileCounter, " of ", nrow(filesList), " at ", Sys.time()))
+
+          if(verbose){
+            print(paste0("End of this loop ", fileCounter, " of ", nrow(filesList), " at ", Sys.time()))
+          }
 
           #Print to the run file
           suppressWarnings(write(paste0("File End Time - ", filesList[fileCounter,1], " at ", format(Sys.time(), "%Y_%m_%d %H:%M:%S")), file = paste0(dateStamp, "_taxaAssign.txt"), append = TRUE))
@@ -687,22 +714,29 @@ taxon_assign<- function(fileLoc = NULL, taxaDBLoc = NULL, numCores = 1, coverage
 
         }#end of the loop
         if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 20")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 20"), file = auditFile, append = TRUE))}
-        print(paste0("Start at ", startTime, " end at ", Sys.time()))
+        if(verbose){
+          print(paste0("Start at ", startTime, " end at ", Sys.time()))
+        }
       }else{ #End of the checking to see if there is a fas or asv associated file
         if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 21")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 21"), file = auditFile, append = TRUE))}
-        print("ERROR - There is no associated fasta or ASV file with one or more of the BLAST files in the target folder. Please try again.")
+        if(verbose){
+          print("ERROR - There is no associated fasta or ASV file with one or more of the BLAST files in the target folder. Please try again.")
+        }
       }
       if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 22")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 22"), file = auditFile, append = TRUE))}
 
     }else{# End of if checking to see if there is a fasta to go with the _BLAST file
 
       if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 23")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 23"), file = auditFile, append = TRUE))}
-      print("ERROR - There is no associated .fas file please ensure both the _BLAST file and the .fas file are located in the selected location and try again.")
-
+      if(verbose){
+        print("ERROR - There is no associated .fas file please ensure both the _BLAST file and the .fas file are located in the selected location and try again.")
+      }
     }
   }else{#End of the if checking to see if there is more than one _BLAST in the file path
     if(auditScript>0){print(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 24")); suppressWarnings(write(paste0(format(Sys.time(), "%Y_%m_%d %H:%M:%S"), " - Audit: 24"), file = auditFile, append = TRUE))}
-    print("ERROR - remove the '_BLAST' from the naming convention in the file structure and try again.")
+    if(verbose){
+      print("ERROR - remove the '_BLAST' from the naming convention in the file structure and try again.")
+    }
 
   }
 }#end of the function
