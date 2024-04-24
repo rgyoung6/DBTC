@@ -32,7 +32,7 @@
 #' @param dbName A short 6-8 alpha character name used when building a database (Default NULL).
 #' @param minLen The minimum sequence length used to construct the BLAST database (Default 100).
 #' @param verbose If set to TRUE then there will be output to the R console, if
-#' FALSE then this reporting data is suppressed.
+#' FALSE then this reporting data is suppressed (Default FALSE).
 #'
 #' @returns
 #' The output from this function includes a folder with the BLAST database named

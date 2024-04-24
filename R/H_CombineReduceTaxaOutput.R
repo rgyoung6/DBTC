@@ -32,7 +32,7 @@
 #' if the results will include read counts or be reduced to 0/1 presence absence values
 #' (Default TRUE)
 #' @param verbose If set to TRUE then there will be output to the R console, if
-#' FALSE then this reporting data is suppressed
+#' FALSE then this reporting data is suppressed (Default FALSE).
 #'
 #' @returns
 #' This function produces a single 'YYYY_MM_DD_HHMM_CombineTaxaReduced' file and
