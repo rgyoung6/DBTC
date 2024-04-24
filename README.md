@@ -458,6 +458,7 @@ Note: Records with BIRT and BCRT flags should be highly scrutinized. TBAT are al
 ### Dependencies
 - [taxonomizr()](https://cran.r-project.org/web/packages/taxonomizr/vignettes/usage.html)
 - pbapply()
+- parallel()
   
 ([Back to Top](#table-of-contents))
 
@@ -482,6 +483,7 @@ The interpretation of the output file for the combine_assign_output() 'YYYY_MM_D
 
 ### Dependencies
 - pbapply()
+- parallel()
   
 ([Back to Top](#table-of-contents))
 
@@ -508,6 +510,7 @@ The columns include, superkingdom, phylum, class, order, family, genus, species,
 
 ### Dependencies
 - pbapply()
+- parallel()
 
 ([Back to Top](#table-of-contents))
 
