@@ -496,7 +496,7 @@ reduce_taxa() - Using results from [taxon_assign()](#taxon-assignment) and/or [C
 This function requires a file in a directory where all '_taxaAssign_YYYY_MM_DD_HHMM.tsv' and/or 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' files in that directory will be combined. All records with the same taxonomic result will be combined. The BLAST values in parentheses ("Num_Rec", "Coverage", "Identity", "Max_eVal") are combine by the mean number of records, the mean of the minimum coverage and identity values, and the mean of the maximum eValues.
 
 ### Arguments
-- <strong>fileLoc -</strong>  The location of a file in a directory where all of the '_taxaAssign_YYYY_MM_DD_HHMM.tsv' and/or 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' files are located.
+- <strong>fileLoc -</strong>  The location of a file in a directory where all of the '_taxaAssign_YYYY_MM_DD_HHMM.tsv' and/or 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' files are located (Default NULL).
 - <strong>numCores -</strong> The number of cores used to run the function (Default 1, Windows systems can only use a single core).
 - <strong>verbose -</strong> If set to TRUE then there will be output to the R console, if FALSE then this reporting data is suppressed (Default TRUE).
 
@@ -523,7 +523,7 @@ combine_reduced_output() - This function takes '_taxaReduced_YYYY_MM_DD_HHMM.tsv
 Select a file in a folder with '_taxaReduced_YYYY_MM_DD_HHMM.tsv' files representing data for the same biological samples but representing different amplified molecular markers.
 
 ### Arguments
-- <strong>fileLoc -</strong>  The location of a file in a directory where all of the '_taxaReduced_YYYY_MM_DD_HHMM.tsv' files are located.
+- <strong>fileLoc -</strong>  The location of a file in a directory where all of the '_taxaReduced_YYYY_MM_DD_HHMM.tsv' files are located (Default NULL).
 - <strong>presenceAbsence -</strong>  A TRUE or FALSE value used to indicate if the read values should be replaced with presence/absence (1/0) data. This change is necessary when combining taxa for the same named samples across molecular markers (TRUE) but is not necessary when combining results for taxa with all unique sample names (FALSE). 
 - <strong>verbose -</strong> If set to TRUE then there will be output to the R console, if FALSE then this reporting data is suppressed (Default TRUE).
 
