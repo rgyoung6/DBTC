@@ -27,7 +27,7 @@
 #' @param numCores The number of cores used to run the function (Default 1,
 #' Windows systems can only use a single core)
 #' @param verbose If set to TRUE then there will be output to the R console, if
-#' FALSE then this reporting data is suppressed (Default FALSE).
+#' FALSE then this reporting data is suppressed (Default TRUE).
 #'
 #' @returns
 #' This function produces a 'YYYY_MM_DD_HHMM_taxaAssignCombined.tsv' and

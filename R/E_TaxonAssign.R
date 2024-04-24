@@ -52,7 +52,7 @@
 #' @param includeAllDada When paired Dada ASV tables are present, when set to
 #' FALSE, this will exclude records without taxonomic assignment (Default TRUE).
 #' @param verbose If set to TRUE then there will be output to the R console, if
-#' FALSE then this reporting data is suppressed (Default FALSE).
+#' FALSE then this reporting data is suppressed (Default TRUE).
 #'
 #' @returns
 #' This function produces a taxa_reduced file for each submitted BLAST-fasta submission.

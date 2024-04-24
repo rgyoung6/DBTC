@@ -36,7 +36,7 @@
 #' YYYY_MM_DD_HHMM_FileName_Merge both .tsv and .fas files (Default NULL).
 #' @param minLen The minimum final desired length of the read (Default 100).
 #' @param verbose If set to TRUE then there will be output to the R console, if
-#' FALSE then this reporting data is suppressed (Default FALSE).
+#' FALSE then this reporting data is suppressed (Default TRUE).
 #'
 #' @returns
 #' The output from this function includes three files.
