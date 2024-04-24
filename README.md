@@ -471,7 +471,7 @@ combine_assign_output() - Using results from the [taxon_assign()](#taxon-assignm
 Select a file in a folder with the taxa assigned files you would like to combine (extension '_taxaAssign_YYYY_MM_DD_HHMM.tsv'). NOTE: all '_taxaAssign_YYYY_MM_DD_HHMM.tsv' files in the folder location should originate from the same dada output file but have outputs from different BLAST sequence libraries and therefore contain the same [ASV's](https://en.wikipedia.org/wiki/Amplicon_sequence_variant).
 
 ### Arguments
-- <strong>fileLoc -</strong> The location of a file in a directory where all of the '_taxaAssign_YYYY_MM_DD_HHMM.tsv' files are located.
+- <strong>fileLoc -</strong> The location of a file in a directory where all of the '_taxaAssign_YYYY_MM_DD_HHMM.tsv' files are located (Default NULL).
 - <strong>numCores -</strong> The number of cores used to run the function (Default 1, Windows systems can only use a single core).
 - <strong>verbose -</strong> If set to TRUE then there will be output to the R console, if FALSE then this reporting data is suppressed (Default TRUE).
 
