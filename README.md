@@ -6,7 +6,7 @@ molecular analysis of high-throughput metabarcode molecular sequence data fastq 
 
   - [Fastq](https://en.wikipedia.org/wiki/FASTQ_format) file processing using Dada in R
   - Using the Basic Local Alignment Search Tool ([BLAST](https://en.wikipedia.org/wiki/BLAST_(biotechnology))), amplicon sequence variants ([ASV](https://en.wikipedia.org/wiki/Amplicon_sequence_variant)) can be searched against local NCBI or custom libraries
-  - Assign taxa to the unique reads using NCBI taxon database (obtain the database using [taxonomizr website](https://cran.r-project.org/web/packages/taxonomizr/vignettes/usage.html))
+  - Assign taxa to the unique reads using NCBI taxon database (obtain the database using [taxonomizr website](https://CRAN.R-project.org/package=taxonomizr))
   - Condense the resulting ASV taxonomic assignment tables to unique taxa with the ability to combine datasets (using different sequence libraries for the same reads, or results from the same samples for different molecular regions) into a combined results table
 
 **NOTE:** While the DBTC package has been built for the analysis of high-throughput sequencing results, the BLAST, taxonomic assignment, and taxonomic condense can be utilized with single specimen Sanger sequencing data.
@@ -77,7 +77,7 @@ Follow the instructions on the NCBI [BLAST+](https://blast.ncbi.nlm.nih.gov/doc/
 Note: It is best to download and install the most recent versions of the blast+ suite to your computer and place the programs in your computers [path](https://en.wikipedia.org/wiki/PATH_(variable)) so you can access the program from any folder. However, the program files for both blastn and makeblastdb have been included in the [DBTCShinyTutorial](https://github.com/rgyoung6/DBTCShinyTutorial) GitHub page for ease of use (please note that these may not be the most recent versions).
 
 ### R package taxonomizr to establish a local NCBI taxonomy database
-The R package [taxonomizr website](https://cran.r-project.org/web/packages/taxonomizr/vignettes/usage.html) is used to establish a NCBI taxaID database (NOTE: this package is also required when using the taxon assignment elements in the DBTC pipeline).
+The R package [taxonomizr website](https://CRAN.R-project.org/package=taxonomizr) is used to establish a NCBI taxaID database (NOTE: this package is also required when using the taxon assignment elements in the DBTC pipeline).
 ```
 install.packages('taxonomizr')
 library('taxonomizr')
@@ -379,7 +379,7 @@ The output from this function includes a folder with the BLAST database named ac
 The constructed database can then be used with the [seq_BLAST()](#sequence-blast) function.
 
 ### Dependencies
-- [taxonomizr()](https://cran.r-project.org/web/packages/taxonomizr/vignettes/usage.html)
+- taxonomizr()
   
 ([Back to Top](#table-of-contents))
 
@@ -456,7 +456,7 @@ There are three columns that deserve special explanation.
 Note: Records with BIRT and BCRT flags should be highly scrutinized. TBAT are also concerning in that they may represent a less specific taxonomic placement due to the moving of the result to a higher taxonomic placement. The taxonomic rank directly below the final reported rank should be reviewed as there may be potential to adjust the final taxonomic assignment. SANF results should be explored and the size of the database, the trust placed in the records in the database, and the depth of the BLAST results should be considered when assessing records with this flag. Records with SFAT are among the least concerning as the BLAST results were saturated but this taxonomic assignment saturation occurred above your set quality coverage and identity threshold. Concerns with records with this result could be that the depth of the BLAST analysis was not low enough for very large databases, or that the database is not complete (taxonomic breadth) when using smaller databases.
 
 ### Dependencies
-- [taxonomizr()](https://cran.r-project.org/web/packages/taxonomizr/vignettes/usage.html)
+- taxonomizr()
 - pbapply()
 - parallel()
   
