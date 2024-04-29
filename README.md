@@ -2,7 +2,7 @@
 DBTC is an R implementation of Dada2 and a BLAST approach to metabarcoding analysis.
 
 # Description
-molecular analysis of high-throughput metabarcode molecular sequence data fastq files and taxonomic assignment of unique reads (in fasta format files) using the Basic Local Alignment Search Tool (BLAST) and R to reduced obtained results (See additional documentation at [DBTC](https://github.com/rgyoung6/DBTC)). The Dada-BLAST-Taxon Assign-Condense ('DBTC') package contains the foundational ['DBTC'](https://github.com/rgyoung6/DBTC) functions run through the R command line (But also see ['DBTCShiny'](https://github.com/rgyoung6/DBTCShiny) and [DBTCShinyTutorial](https://github.com/rgyoung6/DBTCShinyTutorial)). The 'DBTC' functions have four main outcomes...
+Molecular analysis of high-throughput metabarcode sequence data [fastq](https://en.wikipedia.org/wiki/FASTQ_format) files and taxonomic assignment of unique reads (in [fasta](https://en.wikipedia.org/wiki/FASTA_format) format files) using the Basic Local Alignment Search Tool (BLAST) and R to reduced obtained results (See additional documentation at [DBTC](https://github.com/rgyoung6/DBTC)). The Dada-BLAST-Taxon Assign-Condense ('DBTC') package contains the foundational ['DBTC'](https://github.com/rgyoung6/DBTC) functions run through the R command line (But also see ['DBTCShiny'](https://github.com/rgyoung6/DBTCShiny) and [DBTCShinyTutorial](https://github.com/rgyoung6/DBTCShinyTutorial)). The 'DBTC' functions have four main outcomes...
 
   - [Fastq](https://en.wikipedia.org/wiki/FASTQ_format) file processing using Dada in R
   - Using the Basic Local Alignment Search Tool ([BLAST](https://en.wikipedia.org/wiki/BLAST_(biotechnology))), amplicon sequence variants ([ASV](https://en.wikipedia.org/wiki/Amplicon_sequence_variant)) can be searched against local NCBI or custom libraries
@@ -91,7 +91,7 @@ NCBI BLASTable databases can be established through two methods.
 2. You can download your desired preformatted NCBI database manually with instructions at [BLAST FTP Site](https://www.ncbi.nlm.nih.gov/books/NBK62345/#blast_ftp_site.The_blastdb_subdirectory) and a list of the available databases at [Index of /blast/db](https://ftp.ncbi.nlm.nih.gov/blast/db/). 
 
 ### Create a custom sequence database to BLAST against
-In addition to the NCBI resources, DBTC can also use custom databases. To establish these databases you will require a [Fasta](https://en.wikipedia.org/wiki/FASTA_format) file with the desired records with [MACER](https://github.com/rgyoung6/MACER) formatted headers. The [MACER](https://github.com/rgyoung6/MACER) R package and instructions can be found at either of the two locations:
+In addition to the NCBI resources, DBTC can also use custom databases. To establish these databases you will require a [fasta](https://en.wikipedia.org/wiki/FASTA_format) file with the desired records with [MACER](https://github.com/rgyoung6/MACER) formatted headers. The [MACER](https://github.com/rgyoung6/MACER) R package and instructions can be found at either of the two locations:
 
 [MACER CRAN](https://CRAN.R-project.org/package=MACER)
 
