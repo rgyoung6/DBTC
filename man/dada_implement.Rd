@@ -91,7 +91,7 @@ primer regions for the Dada mergePairs() function (Default FALSE).}
 \item{minFinalSeqLen}{The minimum final desired length of the read (Default 100).}
 
 \item{verbose}{If set to TRUE then there will be output to the R console, if
-FALSE then this reporting data is suppressed.}
+FALSE then this reporting data is suppressed (Default TRUE).}
 }
 \value{
 The output from this function includes four folders.
@@ -138,6 +138,11 @@ Format of the primer file
  | AGTGTGTAGTGATTG      | CGCATCGCTCAGACTGACTGC            |
  | GAGCCCTCGATCGCT      | GGTCGATAGCTACGCGCGCATACGACT      |
  |                      | GGTTCACATCGCATTCAT               |
+
+The examples are present to display the syntax for the function.
+These examples are not run because there are files required to run the functions,
+in some cases multiple files are necessary and some of these are quite large. To
+get specific examples please see https://github.com/rgyoung6/DBTCShinyTutorial/blob/main/README.md
 }
 \note{
 WARNING - NO WHITESPACE!

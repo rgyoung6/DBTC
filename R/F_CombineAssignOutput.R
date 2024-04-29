@@ -16,6 +16,11 @@
 #' The User Input: This function requires a file in a directory where all 'taxaAssign'
 #' files in that directory will be combined.
 #'
+#' The examples are present to display the syntax for the function.
+#' These examples are not run because there are files required to run the functions,
+#' in some cases multiple files are necessary and some of these are quite large. To
+#' get specific examples please see https://github.com/rgyoung6/DBTCShinyTutorial/blob/main/README.md
+#'
 #' @examples
 #' \dontrun{
 #' combine_assign_output()
@@ -36,8 +41,8 @@
 #'
 #' @references
 #' <https://github.com/rgyoung6/DBTC>
-#' Young, R. G., Hanner, R. H. (Submitted October 2023). Dada-BLAST-Taxon Assign-Condense
-#' Shiny Application (DBTCShiny). Biodiversity Data Journal.
+#' Young, R. G., Hanner, R. H. (Submitted October 2023). Metabarcoding analysis
+#' using Dada-BLAST-Taxon Assign-Condense Shiny Application (DBTCShiny). Biodiversity Data Journal.
 #'
 #' @note
 #' WARNING - NO WHITESPACE!

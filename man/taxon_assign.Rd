@@ -48,7 +48,7 @@ flags below this threshold (Default 95).}
 FALSE, this will exclude records without taxonomic assignment (Default TRUE).}
 
 \item{verbose}{If set to TRUE then there will be output to the R console, if
-FALSE then this reporting data is suppressed.}
+FALSE then this reporting data is suppressed (Default TRUE).}
 }
 \value{
 This function produces a taxa_reduced file for each submitted BLAST-fasta submission.
@@ -69,6 +69,11 @@ taxonomic assignments. Each assignment has quality metrics in parentheses after
 the name. These values ("Num_Rec", "Coverage", "Identity", "Max_eVal") represent
 the number of records with this taxonomic placement, the minimum coverage and
 identity, and the maximum eValue for the reported taxa.
+
+The examples are present to display the syntax for the function.
+These examples are not run because there are files required to run the functions,
+in some cases multiple files are necessary and some of these are quite large. To
+get specific examples please see https://github.com/rgyoung6/DBTCShinyTutorial/blob/main/README.md
 }
 \note{
 WARNING - NO WHITESPACE!

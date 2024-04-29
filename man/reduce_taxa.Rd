@@ -14,7 +14,7 @@ and/or 'taxaAssignCombine' files are located (Default NULL).}
 Windows systems can only use a single core)}
 
 \item{verbose}{If set to TRUE then there will be output to the R console, if
-FALSE then this reporting data is suppressed.}
+FALSE then this reporting data is suppressed (Default TRUE).}
 }
 \value{
 This function produces a 'taxa_reduced' file for every 'taxaAssign' or
@@ -33,6 +33,11 @@ be combined. All records with the same taxonomic result will be combined. The
 BLAST values in parentheses ("Num_Rec", "Coverage", "Identity", "Max_eVal")
 are combine by the mean number of records, the mean of the minimum coverage
 and identity values, and the mean of the maximum eValues.
+
+The examples are present to display the syntax for the function.
+These examples are not run because there are files required to run the functions,
+in some cases multiple files are necessary and some of these are quite large. To
+get specific examples please see https://github.com/rgyoung6/DBTCShinyTutorial/blob/main/README.md
 }
 \note{
 WARNING - NO WHITESPACE!

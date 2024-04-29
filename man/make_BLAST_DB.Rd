@@ -27,7 +27,7 @@ see the main DBTC page for details).}
 \item{minLen}{The minimum sequence length used to construct the BLAST database (Default 100).}
 
 \item{verbose}{If set to TRUE then there will be output to the R console, if
-FALSE then this reporting data is suppressed.}
+FALSE then this reporting data is suppressed (Default TRUE).}
 }
 \value{
 The output from this function includes a folder with the BLAST database named
@@ -42,6 +42,11 @@ The user inputs the location of a file in a directory that contains a properly f
 fasta file which can be used to construct a BLASTable database. The
 NCBI blast+ program, makeblastdb and the NCBI taxonomic database (accessionTaxa.sql) are required to
 run this script (see readme instructions for details).
+
+The examples are present to display the syntax for the function.
+These examples are not run because there are files required to run the functions,
+in some cases multiple files are necessary and some of these are quite large. To
+get specific examples please see https://github.com/rgyoung6/DBTCShinyTutorial/blob/main/README.md
 }
 \note{
 WARNING - NO WHITESPACE!

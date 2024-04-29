@@ -15,7 +15,7 @@ if the results will include read counts or be reduced to 0/1 presence absence va
 (Default TRUE)}
 
 \item{verbose}{If set to TRUE then there will be output to the R console, if
-FALSE then this reporting data is suppressed}
+FALSE then this reporting data is suppressed (Default TRUE).}
 }
 \value{
 This function produces a single 'YYYY_MM_DD_HHMM_CombineTaxaReduced' file and
@@ -33,6 +33,11 @@ with all taxa from all files combined into a single table with presence absence
 (0 or 1) results. The value metrics for the identification of the taxa from each
 combined file will remain in a column with the parenthetical results from the 'taxaReduced'
 files ("Num_Rec", "Coverage", "Identity", "Max_eVal").
+
+The examples are present to display the syntax for the function.
+These examples are not run because there are files required to run the functions,
+in some cases multiple files are necessary and some of these are quite large. To
+get specific examples please see https://github.com/rgyoung6/DBTCShinyTutorial/blob/main/README.md
 }
 \note{
 WARNING - NO WHITESPACE!

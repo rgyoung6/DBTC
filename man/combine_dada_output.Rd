@@ -14,7 +14,7 @@ YYYY_MM_DD_HHMM_FileName_Merge both .tsv and .fas files (Default NULL).}
 \item{minLen}{The minimum final desired length of the read (Default 100).}
 
 \item{verbose}{If set to TRUE then there will be output to the R console, if
-FALSE then this reporting data is suppressed.}
+FALSE then this reporting data is suppressed (Default TRUE).}
 }
 \value{
 The output from this function includes three files.
@@ -39,6 +39,11 @@ These files need to be ASV files as outputted from the dada_implement() and
 can include Merge, MergeFwdRev, or TotalTable.tsv files.
 In addition, the user can input the desired minimum length of sequences that
 are wanted in the output combined file.
+
+The examples are present to display the syntax for the function.
+These examples are not run because there are files required to run the functions,
+in some cases multiple files are necessary and some of these are quite large. To
+get specific examples please see https://github.com/rgyoung6/DBTCShinyTutorial/blob/main/README.md
 }
 \note{
 WARNING - NO WHITESPACE!

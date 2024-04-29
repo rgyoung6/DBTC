@@ -32,7 +32,7 @@ results, saved from the BLAST (Default 200).}
 Windows systems can only use a single core).}
 
 \item{verbose}{If set to TRUE then there will be output to the R console, if
-FALSE then this reporting data is suppressed.}
+FALSE then this reporting data is suppressed (Default TRUE).}
 }
 \value{
 Two files are produced from this function, a BLAST run file and a BLAST results
@@ -56,6 +56,11 @@ the minimum query sequence length to BLAST (Default 100), the depth of the BLAST
 returned results (default 200), and finally the number of cores to process
 the function (Default 1, Windows implementation will only accept this value
 as 1).
+
+The examples are present to display the syntax for the function.
+These examples are not run because there are files required to run the functions,
+in some cases multiple files are necessary and some of these are quite large. To
+get specific examples please see https://github.com/rgyoung6/DBTCShinyTutorial/blob/main/README.md
 }
 \note{
 WARNING - NO WHITESPACE!
